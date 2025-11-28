@@ -1,0 +1,267 @@
+/* ========================================
+   KINESIOLOGY IS SCIENCE – MODERNI STIL
+   Poboljšano: estetika, responsivnost, UX
+   ======================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css');
+
+/* --- VARIJABLE --- */
+:root {
+  --bg: #0f1724;
+  --bg-gradient: linear-gradient(135deg, #0a0e17 0%, #1a2332 100%);
+  --text: #e6eef8;
+  --text-muted: #a0b4cc;
+  --primary: #00d4aa;
+  --accent: #1e90ff;
+  --card-bg: rgba(255, 255, 255, 0.08);
+  --card-hover: rgba(0, 212, 170, 0.15);
+  --border: rgba(0, 212, 170, 0.25);
+  --shadow: rgba(0, 212, 170, 0.2);
+  --radius: 14px;
+  --transition: all 0.3s ease;
+}
+
+/* --- RESET & OSNOVNO --- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--bg-gradient);
+  color: var(--text);
+  font-family: 'Inter', Arial, sans-serif;
+  line-height: 1.7;
+  text-align: center;
+  padding: 2rem 1rem;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* --- KONTEJNER --- */
+.container {
+  max-width: 800px;
+  width: 100%;
+  animation: fadeIn 0.8s ease-out;
+}
+
+/* --- NASLOVI --- */
+h1 {
+  font-size: 2.8rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 1rem;
+  letter-spacing: -0.5px;
+}
+
+h2 {
+  font-size: 1.9rem;
+  font-weight: 600;
+  color: var(--primary);
+  margin: 2rem 0 1rem;
+}
+
+/* --- PARAGRAFI --- */
+p {
+  font-size: 1.2rem;
+  color: var(--text-muted);
+  max-width: 620px;
+  margin: 0 auto 2.5rem;
+}
+
+/* --- NAVIGACIJA (MENU) --- */
+.menu {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
+  margin: 2rem 0;
+}
+
+.menu a {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: white;
+  background: var(--card-bg);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 1rem 1.8rem;
+  border-radius: var(--radius);
+  font-weight: 600;
+  font-size: 1.1rem;
+  border: 1px solid var(--border);
+  min-width: 150px;
+  transition: var(--transition);
+  overflow: hidden;
+}
+
+.menu a i {
+  font-size: 1.3rem;
+  transition: transform 0.3s ease;
+}
+
+.menu a::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  transition: 0.6s;
+}
+
+.menu a:hover::before {
+  left: 100%;
+}
+
+.menu a:hover {
+  background: var(--card-hover);
+  border-color: var(--primary);
+  transform: translateY(-4px) scale(1.03);
+  box-shadow: 0 12px 30px var(--shadow);
+}
+
+.menu a:hover i {
+  transform: scale(1.2) rotate(5deg);
+}
+
+.menu a:active {
+  transform: translateY(-2px) scale(1.01);
+}
+
+/* --- POVRATNI LINK --- */
+a.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 1.1rem;
+  margin-top: 2rem;
+  transition: color 0.3s;
+}
+
+a.back-link:hover {
+  color: var(--primary);
+}
+
+a.back-link i {
+  transition: transform 0.3s;
+}
+
+a.back-link:hover i {
+  transform: translateX(-4px);
+}
+
+/* --- DUGMAD (KVIZ) --- */
+button {
+  margin: 12px 8px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--card-bg);
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: var(--transition);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border);
+  min-width: 120px;
+}
+
+button:hover {
+  background: var(--card-hover);
+  border-color: var(--primary);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px var(--shadow);
+}
+
+button:active {
+  transform: translateY(-1px);
+}
+
+button:focus {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* --- SVG ANIMACIJE (sklek, čučanj) --- */
+.svg-animation {
+  margin: 3rem auto;
+  max-width: 200px;
+  filter: drop-shadow(0 4px 10px rgba(0, 212, 170, 0.2));
+}
+
+/* Poboljšane animacije */
+.pushup-body {
+  transform-origin: 50% 50%;
+  animation: pushup 1.4s ease-in-out infinite;
+}
+
+.pushup-arm-left,
+.pushup-arm-right {
+  transform-origin: top center;
+  animation: armMove 1.4s ease-in-out infinite;
+}
+
+.squat-body {
+  transform-origin: 50% 20%;
+  animation: squat 1.6s ease-in-out infinite;
+}
+
+@keyframes pushup {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(18px) rotate(-2deg); }
+}
+
+@keyframes armMove {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-35deg); }
+}
+
+@keyframes squat {
+  0%, 100% { transform: translateY(0) scaleY(1); }
+  50% { transform: translateY(25px) scaleY(0.92); }
+}
+
+/* --- RESPONSIVNOST --- */
+@media (max-width: 768px) {
+  h1 { font-size: 2.3rem; }
+  h2 { font-size: 1.7rem; }
+  p { font-size: 1.1rem; }
+  .menu { gap: 1rem; }
+  .menu a { padding: 0.9rem 1.4rem; font-size: 1rem; min-width: 130px; }
+}
+
+@media (max-width: 480px) {
+  body { padding: 1.5rem 1rem; }
+  .container { padding: 0 0.5rem; }
+  h1 { font-size: 2rem; }
+  .menu { flex-direction: column; align-items: center; }
+  .menu a { width: 100%; max-width: 260px; justify-content: center; }
+  button { width: 100%; max-width: 280px; }
+}
+
+/* --- ANIMACIJA UČITAVANJA --- */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- FALLBACK ZA STARIJE PREGLEDNIKE --- */
+@supports not (backdrop-filter: blur(12px)) {
+  .menu a, button {
+    background: rgba(255, 255, 255, 0.12);
+  }
+}

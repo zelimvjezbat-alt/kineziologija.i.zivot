@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="hr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kviz o vježbama i treningu</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root {--bg:#0f172a;--card:#1e293b;--accent:#4ade80;--text:#e2e8f0;--correct:#86efac;--wrong:#fca5a5;}
+    body {background:linear-gradient(135deg,var(--bg) 0%,#1e3a5f 100%);color:var(--text);font-family:'Montserrat',sans-serif;min-height:100vh;margin:0;padding:20px;display:flex;align-items:center;justify-content:center;}
+    .container {background:var(--card);max-width:720px;width:100%;border-radius:20px;padding:35px;box-shadow:0 15px 40px rgba(0,0,0,0.4);text-align:center;}
+    h1 {font-family:'Playfair Display',serif;color:var(--accent);font-size:2.6rem;margin-bottom:10px;}
+    .progress-container {background:#334155;height:12px;border-radius:6px;margin:20px 0;overflow:hidden;}
+    .progress-bar {height:100%;background:var(--accent);width:0%;transition:width .4s ease;}
+    .question-number {font-size:1.1rem;margin-bottom:10px;color:#94a3b8;}
+    .question {font-size:1.4rem;margin:25px 0;line-height:1.5;}
+    .options {display:grid;gap:12px;margin:20px 0;}
+    .option-btn {background:#334155;color:var(--text);border:none;padding:14px 20px;border-radius:12px;font-size:1.1rem;cursor:pointer;transition:all .3s;text-align:left;}
+    .option-btn:hover {background:#475569;}
+    .option-btn.correct {background:var(--correct);color:#000;}
+    .option-btn.wrong {background:var(--wrong);color:#000;}
+    .option-btn:disabled {cursor:not-allowed;opacity:0.8;}
+    .explanation {margin-top:20px;padding:15px;background:rgba(74,222,128,.15);border-radius:10px;font-size:0.95rem;display:none;line-height:1.6;}
+    #nextBtn,#restartBtn {background:var(--accent);color:#000;font-weight:bold;padding:12px 32px;border:none;border-radius:12px;font-size:1.1rem;cursor:pointer;margin-top:20px;display:none;}
+    #nextBtn:hover,#restartBtn:hover {background:#86efac;}
+    .final-score {font-size:2.2rem;margin:20px 0;color:var(--accent);}
+    .back {display:inline-block;margin-top:30px;color:#94a3b8;text-decoration:none;}
+    .back:hover {color:var(--accent);}
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>Kviz o vježbama i treningu</h1>
+  <div class="progress-container"><div class="progress-bar" id="progress"></div></div>
+  <div class="question-number" id="questionNum"></div>
+
+  <div id="quiz">
+    <div class="question" id="questionText"></div>
+    <div class="options" id="options"></div>
+    <div class="explanation" id="explanation"></div>
+  </div>
+
+  <button id="nextBtn" onclick="nextQuestion()">Sljedeće pitanje →</button>
+  <button id="restartBtn" onclick="restartQuiz()">Pokreni ponovo</button>
+
+  <div id="result" style="display:none;">
+    <h2 class="final-score" id="finalScore"></h2>
+    <p id="motivation"></p>
+  </div>
+
+  <a href="index.html" class="back">← Povratak na kategorije</a>
+</div>
+
+<script>
+  const questions = [
+    {q:"Koja vježba najviše aktivira gluteuse?",options:["Čučanj","Mrtvo dizanje","Iskorak unatrag"],answer:2,exp:"Iskorak unatrag (reverse lunge) daje najveću aktivaciju gluteusa maximusa."},
+    {q:"Koliko serija je optimalno za hipertrofiju?",options:["1–3","3–5","10–20"],answer:1,exp:"Najčešće preporuka je 3–5 serija po vježbi za maksimalni rast mišića."},
+    {q:"Što je 'drop set'?",options:["Smanjenje težine bez pauze","Povećanje težine","Vježba do otkaza"],answer:0,exp:"Odmah nakon otkaza smanjiš težinu 20–30 % i nastaviš do novog otkaza."},
+    {q:"Koliko vremena treba za potpuni oporavak mišića?",options:["24 h","48–72 h","7 dana"],answer:1,exp:"Većini je potrebno 48–72 sata za puni oporavak iste mišićne grupe."},
+    {q:"Što je bolje za snagu – manje ponavljanja s većom težinom ili više s manjom?",options:["Manje ponavljanja","Više ponavljanja","Isto je"],answer:0,exp:"1–6 ponavljanja s 85–100 % 1RM je najbolje za maksimalnu snagu."},
+    {q:"Koliko pauze između serija za snagu?",options:["30–60 sek","1–2 min","3–5 min"],answer:2,exp:"Za maksimalnu snagu preporučuje se 3–5 minuta pauze."},
+    {q:"Koja vježba najviše aktivira jezgru (core)?",options:["Plank","Russian twist","Leg raise na šipci"],answer:2,exp:"Leg raise na šipci daje najveću aktivaciju rectus abdominis i transversus abdominis."},
+    {q:"Što znači 'progressive overload'?",options:["Postupno povećavanje opterećenja","Isto svaki trening","Smanjenje težine"],answer:0,exp:"Ključ rasta mišića je stalno povećavanje zahtjeva (težina, ponavljanja, serije)."},
+    {q:"Koliko vode treba piti tijekom treninga?",options:["Samo kad si žedan","0,5–1 l na sat","2–3 litre odjednom"],answer:1,exp:"Općenito 0,5–1 litra na sat intenzivnog treninga."},
+    {q:"Što je 'superset'?",options:["Dvije vježbe zaredom bez pauze","Jedna vježba s pauzom","Tri vježbe"],answer:0,exp:"Najčešće antagonisticke mišićne grupe (npr. biceps + triceps)."},
+    {q:"Koja je najbolja vježba za leđa po EMG studijama?",options:["Zgibovi","Veslanje šipkom","Lat mašina"],answer:0,exp:"Zgibovi daju najveću aktivaciju latissimus dorsi."},
+    {q:"Koliko dana tjedno je optimalno za trening?",options:["1–2","3–6","Svaki dan"],answer:1,exp:"Za većinu ljudi 3–6 dana tjedno je optimalno uz dovoljan oporavak."},
+    {q:"Što je 'DOMS'?",options:["Bol u zglobovima","Odgođena bol u mišićima","Bol od ozljede"],answer:1,exp:"Delayed Onset Muscle Soreness – bol 24–72 h nakon treninga."},
+    {q:"Koja vježba najviše aktivira prednju stranu bedra?",options:["Čučanj","Leg press","Leg extension"],answer:2,exp:"Leg extension izolira quadriceps najviše."},
+    {q:"Što je 'time under tension'?",options:["Vrijeme provedeno u teretani","Ukupno vrijeme mišića pod naponom","Broj serija"],answer:1,exp:"Ključno za hipertrofiju – obično 40–70 sekundi po seriji."}
+  ];
+
+  let current=0,score=0;
+  const progressBar=document.getElementById("progress");
+  const questionText=document.getElementById("questionText");
+  const optionsDiv=document.getElementById("options");
+  const explanationDiv=document.getElementById("explanation");
+  const nextBtn=document.getElementById("nextBtn");
+  const restartBtn=document.getElementById("restartBtn");
+  const resultDiv=document.getElementById("result");
+  const finalScore=document.getElementById("finalScore");
+  const motivation=document.getElementById("motivation");
+  const questionNum=document.getElementById("questionNum");
+
+  function startQuiz(){current=0;score=0;resultDiv.style.display="none";nextBtn.style.display="none";showQuestion();}
+  function showQuestion(){
+    const q=questions[current];
+    questionNum.textContent=`Pitanje ${current+1} od ${questions.length}`;
+    questionText.textContent=q.q;
+    optionsDiv.innerHTML="";explanationDiv.style.display="none";
+    q.options.forEach((opt,i)=>{const btn=document.createElement("button");btn.classList.add("option-btn");btn.textContent=opt;btn.onclick=()=>selectAnswer(i,btn,q);optionsDiv.appendChild(btn);});
+    progressBar.style.width=`${((current+1)/questions.length)*100}%`;
+  }
+  function selectAnswer(selected,btn,q){
+    const buttons=optionsDiv.querySelectorAll(".option-btn");buttons.forEach(b=>b.disabled=true);
+    if(selected===q.answer){btn.classList.add("correct");score++;}else{btn.classList.add("wrong");buttons[q.answer].classList.add("correct");}
+    explanationDiv.textContent=q.exp;explanationDiv.style.display="block";nextBtn.style.display="block";
+  }
+  function nextQuestion(){current++;if(current<questions.length){showQuestion();nextBtn.style.display="none";}else{showResult();}}
+  function showResult(){
+    document.getElementById("quiz").innerHTML="";nextBtn.style.display="none";restartBtn.style.display="block";resultDiv.style.display="block";
+    finalScore.textContent=`${score}/${questions.length}`;
+    if(score===questions.length)motivation.textContent="Ti si trener iz snova! 💪";
+    else if(score>=questions.length*0.8)motivation.textContent="Fantastičan rezultat – gotovo si spreman za certifikat!";
+    else if(score>=questions.length*0.6)motivation.textContent="Odlično! Samo još malo i bit ćeš pravi znalac treninga!";
+    else if(score>=questions.length*0.4)motivation.textContent="Dobro ide! Nastavi trenirati i učiti!";
+    else motivation.textContent="Svaki početak je težak – vrati se i pokušaj ponovo!";
+  }
+  function restartQuiz(){restartBtn.style.display="none";startQuiz();}
+  startQuiz();
+</script>
+</body>
+</html>

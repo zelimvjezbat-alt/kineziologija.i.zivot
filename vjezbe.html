@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trening - Vježbe</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card: rgba(255, 255, 255, 0.07);
+            --text: #e2e8f0;
+            --muted: #94a3b8;
+            --accent: #22d3ee;
+            --accent2: #67e8f9;
+            --danger: #f87171;
+            --shadow: 0 12px 32px rgba(0, 0, 0, 0.3);
+            --border: rgba(255, 255, 255, 0.1);
+        }
+        [data-theme="light"] {
+            --bg: #f8fafc;
+            --card: rgba(255, 255, 255, 0.9);
+            --text: #1e293b;
+            --muted: #64748b;
+            --accent: #0891b2;
+            --accent2: #06b6d4;
+            --danger: #dc2626;
+            --shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+            --border: rgba(0, 0, 0, 0.1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 20px 16px;
+            transition: all 0.4s ease;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .main, .sidebar {
+            background: var(--card);
+            padding: 28px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+        .main { flex: 2; min-width: 320px; }
+        .sidebar { flex: 1; min-width: 280px; }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .back-btn {
+            background: rgba(255,255,255,0.1);
+            color: var(--text);
+            text-decoration: none;
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        .back-btn:hover { background: var(--accent); color: white; }
+
+        h1 {
+            font-size: 2.1rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .theme-toggle {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 12px;
+            cursor: pointer;
+        }
+        .theme-toggle:hover { background: var(--accent2); }
+
+        .add-btn {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: white; border: none; padding: 14px 32px; border-radius: 50px;
+            font-weight: 600; cursor: pointer; width: 100%; margin: 20px 0;
+        }
+
+        /* Vježbe */
+        .exercise {
+            background: rgba(255,255,255,0.06);
+            margin: 18px 0; padding: 20px; border-radius: 16px;
+            border-left: 5px solid var(--accent);
+        }
+        .exercise h3 {
+            font-size: 1.4rem; margin-bottom: 12px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .remove-exercise {
+            background: var(--danger); color: white; border: none;
+            width: 32px; height: 32px; border-radius: 50%; cursor: pointer;
+        }
+
+        .set-controls {
+            display: flex; justify-content: center; align-items: center; gap: 16px;
+            background: rgba(255,255,255,0.05); padding: 10px 20px; border-radius: 16px;
+            margin-bottom: 14px;
+        }
+        .set-btn {
+            background: var(--accent); color: white; width: 40px; height: 40px;
+            border-radius: 12px; border: none; font-size: 1.3rem; cursor: pointer;
+        }
+
+        .sets {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+        }
+        .set {
+            background: rgba(255,255,255,0.1);
+            padding: 12px; border-radius: 12px; text-align: center;
+            border: 1px solid var(--border);
+        }
+        .set input[type="checkbox"] { transform: scale(1.4); accent-color: var(--accent); }
+        .completed { background: var(--accent) !important; color: white !important; }
+
+        .success {
+            margin: 30px 0; padding: 20px; background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: white; border-radius: 16px; text-align: center; font-size: 1.5rem; display: none;
+        }
+
+        .workout-item, .pb-item {
+            background: rgba(255,255,255,0.06); padding: 14px; border-radius: 12px;
+            margin-bottom: 10px; display: flex; justify-content: space-between;
+            cursor: pointer;
+        }
+        .workout-item.active { background: var(--accent); color: white; }
+
+        /* Modal */
+        .modal {
+            display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.8); justify-content: center; align-items: center;
+            z-index: 1000; backdrop-filter: blur(10px);
+        }
+        .modal-content {
+            background: var(--card); padding: 32px; border-radius: 20px;
+            width: 90%; max-width: 460px; box-shadow: var(--shadow);
+        }
+        .modal input, .modal select {
+            width: 100%; padding: 12px; margin: 10px 0; border-radius: 12px;
+            border: 1px solid var(--border); background: rgba(255,255,255,0.05); color: var(--text);
+        }
+    </style>
+</head>
+<body data-theme="dark">
+
+<div class="container">
+    <div class="main">
+        <div class="header">
+            <a href="landing.html" class="back-btn">Početna</a>
+            <h1>Trening</h1>
+            <button class="theme-toggle" onclick="toggleTheme()">Svijetli način</button>
+        </div>
+
+        <button class="add-btn" onclick="openModal('exercise-modal')">+ Dodaj Vježbu</button>
+
+        <div id="exercises"></div>
+
+        <div id="success" class="success">Bravo! Završio si trening!</div>
+    </div>
+
+    <div class="sidebar">
+        <h2>Treninzi</h2>
+        <button class="add-btn" onclick="openModal('new-workout-modal')">+ Novi Trening</button>
+        <div id="workout-list"></div>
+
+        <h2 style="margin-top:32px">Rekordi</h2>
+        <button class="add-btn" onclick="openModal('pb-modal')">+ Dodaj Rekord</button>
+        <div id="pb-list"></div>
+    </div>
+</div>
+
+<!-- Modali -->
+<div id="exercise-modal" class="modal">
+    <div class="modal-content">
+        <h2>Dodaj vježbu</h2>
+        <input type="text" id="exercise-name" placeholder="Ime vježbe">
+        <select id="exercise-type">
+            <option value="reps">Ponavljanja</option>
+            <option value="time">Sekunde</option>
+        </select>
+        <input type="number" id="exercise-value" placeholder="Broj">
+        <input type="number" id="exercise-sets" placeholder="Serije" value="3">
+        <button class="add-btn" onclick="addExercise()">Dodaj</button>
+        <button onclick="closeModal('exercise-modal')" style="background:#64748b;margin-top:8px;width:100%;padding:12px;border:none;border-radius:12px;cursor:pointer;">Odustani</button>
+    </div>
+</div>
+
+<div id="new-workout-modal" class="modal">
+    <div class="modal-content">
+        <h2>Novi trening</h2>
+        <input type="text" id="workout-name" placeholder="Ime treninga">
+        <button class="add-btn" onclick="addNewWorkout()">Spremi</button>
+        <button onclick="closeModal('new-workout-modal')" style="background:#64748b;margin-top:8px;width:100%;padding:12px;border:none;border-radius:12px;cursor:pointer;">Odustani</button>
+    </div>
+</div>
+
+<div id="pb-modal" class="modal">
+    <div class="modal-content">
+        <h2>Dodaj rekord</h2>
+        <input type="text" id="pb-exercise" placeholder="Vježba">
+        <input type="text" id="pb-value" placeholder="Rezultat">
+        <button class="add-btn" onclick="addPb()">Spremi</button>
+        <button onclick="closeModal('pb-modal')" style="background:#64748b;margin-top:8px;width:100%;padding:12px;border:none;border-radius:12px;cursor:pointer;">Odustani</button>
+    </div>
+</div>
+
+<script>
+    let workouts = JSON.parse(localStorage.getItem('workouts_app')) || [
+        { name: "Početni", exercises: [
+            { name: "Sklekovi", value: 12, sets: 3, type: "reps", unit: "pon." },
+            { name: "Čučnjevi", value: 15, sets: 3, type: "reps", unit: "pon." },
+            { name: "Plank", value: 45, sets: 3, type: "time", unit: "sek" }
+        ]}
+    ];
+    let current = 0;
+    let pbs = JSON.parse(localStorage.getItem('pbs_app')) || [];
+
+    function save() {
+        localStorage.setItem('workouts_app', JSON.stringify(workouts));
+        localStorage.setItem('pbs_app', JSON.stringify(pbs));
+    }
+
+    function renderAll() {
+        renderWorkoutList();
+        renderExercises();
+        renderPbs();
+    }
+
+    function renderWorkoutList() {
+        const list = document.getElementById('workout-list');
+        list.innerHTML = '';
+        workouts.forEach((w, i) => {
+            const div = document.createElement('div');
+            div.className = `workout-item ${i === current ? 'active' : ''}`;
+            div.innerHTML = `<span>${w.name}</span>
+                <button style="background:#f87171;color:white;border:none;width:28px;height:28px;border-radius:50%;cursor:pointer;"
+                        onclick="event.stopPropagation();removeWorkout(${i})">×</button>`;
+            div.onclick = () => { current = i; renderAll(); };
+            list.appendChild(div);
+        });
+    }
+
+    function renderExercises() {
+        const cont = document.getElementById('exercises');
+        cont.innerHTML = '';
+        if (!workouts[current]) return;
+        workouts[current].exercises.forEach((ex, i) => {
+            const div = document.createElement('div');
+            div.className = 'exercise';
+            div.innerHTML = `
+                <h3>${ex.name} ${ex.type==='time' ? '(sekunde)' : '(pon.)'}
+                    <button class="remove-exercise" onclick="removeExercise(${i})">×</button>
+                </h3>
+                <div class="set-controls">
+                    <button class="set-btn" onclick="changeSets(${i},-1)">−</button>
+                    <span><strong>${ex.sets}</strong> serije</span>
+                    <button class="set-btn" onclick="changeSets(${i},1)">+</button>
+                </div>
+                <div class="sets">
+                    ${Array.from({length: ex.sets}, (_, s) => `
+                        <div class="set">
+                            <input type="checkbox" id="cb-${current}-${i}-${s}" onchange="toggleSet(this)">
+                            <label for="cb-${current}-${i}-${s}">${s+1}.</label>
+                        </div>
+                    `).join('')}
+                </div>
+                <p style="text-align:center;margin-top:8px;color:var(--muted);font-size:0.9rem;">
+                    ${ex.value} ${ex.unit} po seriji
+                </p>
+            `;
+            cont.appendChild(div);
+        });
+        loadChecks();
+        checkDone();
+    }
+
+    function renderPbs() {
+        const list = document.getElementById('pb-list');
+        list.innerHTML = '';
+        pbs.forEach((p, i) => {  // ISPRAVLJENO: bilo je "p Impression"
+            const div = document.createElement('div');
+            div.className = 'pb-item';
+            div.innerHTML = `<span>${p.exercise}: ${p.value}</span>
+                <button style="background:#f87171;color:white;border:none;width:28px;height:28px;border-radius:50%;cursor:pointer;"
+                        onclick="event.stopPropagation(); pbs.splice(${i},1); save(); renderPbs()">×</button>`;
+            list.appendChild(div);
+        });
+    }
+
+    function changeSets(i, delta) {
+        const newSets = workouts[current].exercises[i].sets + delta;
+        if (newSets >= 1) {
+            workouts[current].exercises[i].sets = newSets;
+            save();
+            renderExercises();
+        }
+    }
+
+    function toggleSet(cb) {
+        if (cb.checked) {
+            localStorage.setItem(cb.id, '1');
+            cb.parentElement.classList.add('completed');
+        } else {
+            localStorage.removeItem(cb.id);
+            cb.parentElement.classList.remove('completed');
+        }
+        checkDone();
+    }
+
+    function loadChecks() {
+        document.querySelectorAll('input[type=checkbox]').forEach(cb => {
+            if (localStorage.getItem(cb.id) === '1') {
+                cb.checked = true;
+                cb.parentElement.classList.add('completed');
+            }
+        });
+    }
+
+    function checkDone() {
+        const all = document.querySelectorAll('#exercises input[type=checkbox]');
+        const done = document.querySelectorAll('#exercises input[type=checkbox]:checked');
+        document.getElementById('success').style.display = 
+            all.length > 0 && all.length === done.length ? 'block' : 'none';
+    }
+
+    function removeExercise(i) {
+        if (confirm('Ukloniti vježbu?')) {
+            workouts[current].exercises.splice(i, 1);
+            save();
+            renderExercises();
+        }
+    }
+
+    function removeWorkout(i) {
+        if (confirm('Ukloniti cijeli trening?')) {
+            workouts.splice(i, 1);
+            if (current >= workouts.length) current = 0;
+            save();
+            renderAll();
+        }
+    }
+
+    function addExercise() {
+        const name = document.getElementById('exercise-name').value.trim();
+        const type = document.getElementById('exercise-type').value;
+        const value = parseInt(document.getElementById('exercise-value').value);
+        const sets = parseInt(document.getElementById('exercise-sets').value) || 3;
+        if (!name || isNaN(value)) return alert('Popuni sva polja!');
+        workouts[current].exercises.push({
+            name, value, sets, type,
+            unit: type === 'time' ? 'sek' : 'pon.'
+        });
+        save();
+        closeModal('exercise-modal');
+        renderExercises();
+    }
+
+    function addNewWorkout() {
+        const name = document.getElementById('workout-name').value.trim();
+        if (!name) return alert('Unesi ime treninga!');
+        workouts.push({ name, exercises: [] });
+        current = workouts.length - 1;
+        save();
+        closeModal('new-workout-modal');
+        renderAll();
+    }
+
+    function addPb() {
+        const ex = document.getElementById('pb-exercise').value.trim();
+        const val = document.getElementById('pb-value').value.trim();
+        if (!ex || !val) return alert('Popuni oba polja!');
+        pbs.push({ exercise: ex, value: val });
+        save();
+        closeModal('pb-modal');
+        renderPbs();
+    }
+
+    function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+    function toggleTheme() {
+        const isLight = document.body.getAttribute('data-theme') === 'light';
+        document.body.setAttribute('data-theme', isLight ? 'dark' : 'light');
+        localStorage.setItem('theme_app', isLight ? 'dark' : 'light');
+    }
+
+    window.onload = () => {
+        const theme = localStorage.getItem('theme_app') || 'dark';
+        document.body.setAttribute('data-theme', theme);
+        renderAll();
+    };
+</script>
+</body>
+</html>

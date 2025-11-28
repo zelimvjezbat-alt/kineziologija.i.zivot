@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="hr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Zanimljivosti o tijelu i kineziologiji</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f1724;
+      --text: #e6eef8;
+      --accent: #4ade80;
+      --card-bg: #1e293b;
+      --shadow: 0 8px 20px rgba(0,0,0,0.3);
+      --category-bg: rgba(74, 222, 128, 0.15);
+    }
+
+    body {
+      background: linear-gradient(135deg, var(--bg) 0%, #1a2332 100%);
+      color: var(--text);
+      font-family: 'Montserrat', sans-serif;
+      text-align: center;
+      padding: 40px 20px;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 3rem;
+      margin-bottom: 3rem;
+      color: var(--accent);
+      text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+    }
+
+    .category {
+      max-width: 900px;
+      margin: 3rem auto;
+      text-align: left;
+    }
+
+    .category h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+      text-align: center;
+      position: relative;
+    }
+
+    .category h2::after {
+      content: '';
+      display: block;
+      width: 80px;
+      height: 4px;
+      background: var(--accent);
+      margin: 12px auto 0;
+      border-radius: 2px;
+    }
+
+    .facts-grid {
+      display: grid;
+      gap: 1.5rem;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    }
+
+    .fact-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 1.8rem;
+      box-shadow: var(--shadow);
+      transition: all 0.3s ease;
+      border-left: 5px solid var(--accent);
+      cursor: pointer; /* Pokazuje da je klikabilno */
+      position: relative;
+    }
+
+    .fact-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 28px rgba(74, 222, 128, 0.25);
+    }
+
+    .fact-card::after {
+      content: "→";
+      position: absolute;
+      top: 50%;
+      right: 15px;
+      transform: translateY(-50%);
+      font-size: 1.8rem;
+      color: var(--accent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .fact-card:hover::after {
+      opacity: 0.6;
+    }
+
+    .fact-card h3 {
+      margin: 0 0 0.8rem;
+      color: var(--accent);
+      font-size: 1.3rem;
+      padding-right: 30px; /* prostor za strelicu */
+    }
+
+    .fact-card p {
+      margin: 0;
+      line-height: 1.65;
+      color: #cbd5e1;
+    }
+
+    .emoji {
+      font-size: 1.8rem;
+      margin-right: 0.5rem;
+      vertical-align: middle;
+    }
+
+    a.back {
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 600;
+      margin-top: 4rem;
+      display: inline-flex;
+      align-items: center;
+      font-size: 1.2rem;
+    }
+
+    a.back:hover { color: var(--accent); }
+    a.back::before { content: "←"; margin-right: 0.5rem; font-weight: bold; }
+
+    @media (max-width: 600px) {
+      h1 { font-size: 2.4rem; }
+      .facts-grid { grid-template-columns: 1fr; }
+      .fact-card h3 { padding-right: 40px; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Zanimljivosti o tijelu i kineziologiji</h1>
+<p>(stisni na pojedinu zanimljvost ako te zanima više)</p>
+  <!-- 1. Kosti i zglobovi -->
+  <section class="category">
+    <h2>🦴 Kosti i zglobovi</h2>
+    <div class="facts-grid">
+      <div class="fact-card" data-id="kosti-zive">
+        <h3><span class="emoji">🦴</span> Kosti nisu mrtve!</h3>
+        <p>Kosti su živo tkivo koje se neprestano obnavlja – svake godine oko 10 % kostiju u tijelu zamijeni se novim! Zato je važno vježbati s opterećenjem.</p>
+      </div>
+      <div class="fact-card" data-id="beba-vise-kostiju">
+        <h3><span class="emoji">👶</span> Beba ima više kostiju</h3>
+        <p>Novođenče ima oko 270 kostiju, a odrasla osoba samo 206 – neke se kosti spajaju tijekom rasta (npr. lubanja).</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. Mišići i snaga -->
+  <section class="category">
+    <h2>💪 Mišići i snaga</h2>
+    <div class="facts-grid">
+      <div class="fact-card" data-id="misicna-memorija">
+  <h3><span class="emoji">💪</span> Mišići "pamte"</h3>
+  <p>Nakon što si bio u formi, mišićne jezgre ostaju godinama – zato se snaga vraća brže nego kod netko tko nikad nije trenirao!</p>
+</div>
+      <div class="fact-card" data-id="tipovi-vlakana">
+        <h3><span class="emoji">⚡</span> Tipovi mišićnih vlakana</h3>
+        <p>Imamo spora (tip I – izdržljivost) i brza vlakna (tip II – eksplozivnost). Omjer je uglavnom genetski određen, ali treningom se može malo pomaknuti.</p>
+      </div>
+      <div class="fact-card" data-id="gluteus-najjaci">
+        <h3><span class="emoji">🔥</span> Najjači mišić po veličini</h3>
+        <p>Gluteus maximus (veliki stražnjični mišić) je najjači mišić u tijelu – omogućava ustajanje, trčanje i skakanje.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. Mozak i živčani sustav -->
+  <section class="category">
+    <h2>🧠 Mozak i vježbanje</h2>
+    <div class="facts-grid">
+      <div class="fact-card" data-id="bdnf-mozak">
+        <h3><span class="emoji">🧠</span> Mozak voli kretanje</h3>
+        <p>Vježbanje povećava BDNF ("gnojivo za mozak") koji pomaže stvaranju novih neurona i poboljšava pamćenje.</p>
+      </div>
+      <div class="fact-card" data-id="trcanje-hipokampus">
+        <h3><span class="emoji">🏃‍♂️</span> Trčanje mijenja mozak</h3>
+        <p>Redovito trčanje povećava volumen hipokampusa i poboljšava prostornu orijentaciju.</p>
+      </div>
+      <div class="fact-card" data-id="10min-koncentracija">
+    <span class="emoji">🎯</span>
+    <h3>10 minuta vježbanja = bolja koncentracija</h3>
+    <p>Samo 10–20 min umjerene aktivnosti i mozak ti radi kao da si popio kavu!</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Srce, pluća i izdržljivost -->
+  <section class="category">
+    <h2>❤️ Srce i izdržljivost</h2>
+    <div class="facts-grid">
+      <div class="fact-card" data-id="srce-najjaci-misic">
+        <h3><span class="emoji">❤️</span> Srce je najjači mišić</h3>
+        <p>Kuca 100.000 puta dnevno i tijekom života pređe put do Mjeseca i natrag.</p>
+      </div>
+      <div class="fact-card" data-id="pluca-sportasa">
+        <h3><span class="emoji">🫁</span> Pluća sportaša</h3>
+        <p>Elitni sportaši mogu imati i do 50 % veći kapacitet pluća od prosječne osobe.</p>
+      </div>
+  
+
+    </div>
+  </section>
+
+  <!-- 5. Ostale cool činjenice -->
+  <section class="category">
+    <h2>✨ Ostale zanimljivosti</h2>
+    <div class="facts-grid">
+      <div class="fact-card" data-id="vjezbanje-san">
+        <h3><span class="emoji">😴</span> Vježbanje poboljšava san</h3>
+        <p>Tjelesna aktivnost skraćuje vrijeme potrebno za uspavljivanje i produbljuje san.</p>
+      </div>
+      <div class="fact-card" data-id="valsalva-manevar">
+        <h3><span class="emoji">🏋️‍♂️</span> Valsalva manevar</h3>
+        <p>Izdisaj kroz stisnute usne tijekom teškog dizanja stabilizira kralježnicu i omogućava veće težine.</p>
+      </div>
+      <div class="fact-card" data-id="znojenje-hladi">
+        <h3><span class="emoji">🌡️</span> Tijelo se hladi znojenjem</h3>
+        <p>Jedan litra znoja može ohladiti tijelo za čak 6 °C – zato pijte dovoljno vode!</p>
+      </div>
+     <div class="fact-card" data-id="djeca-nisu-odrasli">
+    <span class="emoji">🧒</span>
+    <h3>Djeca nisu mali odrasli</h3>
+    <p>Kad je najbolje učiti koordinaciju, brzinu, snagu… i zašto ne smiješ forsirati?</p>
+</div>
+      <div class="fact-card" data-id="gen-za-trkace">
+        <h3><span class="emoji">🧬</span> Gen ETS – "gen za trkače"</h3>
+        <p>Neki ljudi imaju varijantu gena koja im omogućava bolju iskoristivost kisika – zato su neki rođeni za maraton!</p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- JavaScript za klik na karticu -->
+  <script>
+    document.querySelectorAll('.fact-card').forEach(card => {
+      card.addEventListener('click', function() {
+        const id = this.getAttribute('data-id');
+        // Otvara novu stranicu s nazivom po data-id
+        window.location.href = `clanak/${id}.html`;
+      });
+    });
+  </script>
+  <div style="text-align: center; margin: 60px 0;">
+  <a href="../landing.html" class="back" style="display: inline-flex; align-items: center; background: rgba(74,222,128,0.2); color: #4ade80; padding: 15px 30px; border-radius: 50px; text-decoration: none; font-weight: 600; font-size: 1.2rem;">
+    ← Natrag na početnu
+  </a>
+</div>
+</body>
+</html>

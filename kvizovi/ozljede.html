@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="hr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prevencija ozljeda u teretani – Kviz</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --accent: #ef4444;  /* crvena za ozljede */
+      --text: #e2e8f0;
+      --correct: #86efac;
+      --wrong: #fca5a5;
+    }
+    body {
+      background: linear-gradient(135deg, #170a0a 0%, #4c1d1d 100%);
+      color: var(--text);
+      font-family: 'Montserrat', sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .container {
+      background: var(--card);
+      max-width: 700px;
+      width: 100%;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+      text-align: center;
+    }
+    h1 {
+      font-family: 'Playfair Display', serif;
+      color: var(--accent);
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+    .progress-container {
+      background: #334155;
+      height: 12px;
+      border-radius: 6px;
+      margin: 20px 0;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      background: var(--accent);
+      width: 0%;
+      transition: width 0.4s ease;
+    }
+    /* ostali stilovi identični kao u prošlom kvizu */
+    .question-number { font-size: 1.1rem; margin-bottom: 10px; color: #94a3b8; }
+    .question { font-size: 1.4rem; margin: 25px 0; line-height: 1.5; }
+    .options { display: grid; gap: 12px; margin: 20px 0; }
+    .option-btn { background: #334155; color: var(--text); border: none; padding: 14px 20px; border-radius: 12px; font-size: 1.1rem; cursor: pointer; transition: all 0.3s; text-align: left; }
+    .option-btn:hover { background: #475569; }
+    .option-btn.correct { background: var(--correct); color: #000; }
+    .option-btn.wrong { background: var(--wrong); color: #000; }
+    .option-btn:disabled { cursor: not-allowed; opacity: 0.8; }
+    .explanation { margin-top: 20px; padding: 15px; background: rgba(239, 68, 68, 0.15); border-radius: 10px; font-size: 0.95rem; display: none; }
+    #nextBtn, #restartBtn { background: var(--accent); color: #fff; font-weight: bold; padding: 12px 30px; border: none; border-radius: 12px; font-size: 1.1rem; cursor: pointer; margin-top: 20px; display: none; }
+    #nextBtn:hover, #restartBtn:hover { background: #f87171; }
+    .final-score { font-size: 2rem; margin: 20px 0; color: var(--accent); }
+    .back { display: inline-block; margin-top: 30px; color: #94a3b8; text-decoration: none; }
+    .back:hover { color: var(--accent); }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Prevencija ozljeda</h1>
+  <div class="progress-container"><div class="progress-bar" id="progress"></div></div>
+  <div class="question-number" id="questionNum"></div>
+
+  <div id="quiz">
+    <div class="question" id="questionText"></div>
+    <div class="options" id="options"></div>
+    <div class="explanation" id="explanation"></div>
+  </div>
+
+  <button id="nextBtn" onclick="nextQuestion()">Sljedeće pitanje →</button>
+  <button id="restartBtn" onclick="restartQuiz()">Pokreni ponovo</button>
+
+  <div id="result" style="display:none;">
+    <h2 class="final-score" id="finalScore"></h2>
+    <p id="motivation"></p>
+  </div>
+
+  <a href="index.html" class="back">← Povratak na kategorije</a>
+</div>
+
+<script>
+  const questions = [
+    { q: "Koja je najčešća ozljeda ramena u teretani?", 
+      options: ["Impingement sindrom", "Ruptura tetive bicepsa", "Dislokacija"], 
+      answer: 0, 
+      exp: "Impingement – tetiva rotator cuffa se stisne ispod akromiona. Glavni krivci: loša tehnika bench pressa i previše vježbi iznad glave." },
+
+    { q: "Što je glavni razlog za bol u donjem dijelu leđa kod mrtvog dizanja?", 
+      options: ["Slaba aktivacija core-a i gubitak neutralne kralježnice", "Prejaka šipka", "Previše proteina"], 
+      answer: 0, 
+      exp: "Kad leđa 'zaokrugle' pod teretom, diskovi su pod ogromnim pritiskom. Drži neutralnu kralježnicu i brace!" },
+
+    { q: "Koja vježba najčešće uzrokuje herniaciju diska?", 
+      options: ["Čučanj s lošom tehnikom", "Bench press", "Zgibovi"], 
+      answer: 0, 
+      exp: "Fleksija kralježnice pod opterećenjem (npr. 'butt wink' u čučnju ili zaokrugljena leđa u mrtvom) = recept za hernijaciju." },
+
+    { q: "Što je 'teniski lakat' u teretani?", 
+      options: ["Upala ekstenzora podlaktice (lateralni epikondilitis)", "Upala fleksora", "Puknuće tetive"], 
+      answer: 0, 
+      exp: "Bol na vanjskoj strani lakta – najčešće od prejakog gripa, previše veslanja ili loše tehnike triceps ekstenzija." },
+
+    { q: "Zašto se patelarna tendinopatija ('jumper’s knee') javlja kod liftera?", 
+      options: ["Preveliki volumen čučnjeva i ekstenzija bez dovoljnog oporavka", "Prejaka obuća", "Premalo proteina"], 
+      answer: 0, 
+      exp: "Tetiva patele ne podnosi brze skokove u volumenu ili frekvenciji. Polako povećavaj teret!" },
+
+    { q: "Koji je najveći faktor rizika za sve ozljede u teretani?", 
+      options: ["Prebrzo povećanje težine/volumena (previše ego liftinga)", "Loša prehrana", "Nedostatak suplementa"], 
+      answer: 0, 
+      exp: "80 % ozljeda dolazi od prevelikog i prebrzog napredovanja. Pravilo 10 % tjedno nije šala!" },
+
+    { q: "Što znači 'RICE' protokol kod akutne ozljede?", 
+      options: ["Rest, Ice, Compression, Elevation", "Run, Ice, Caffeine, Energy", "Repeat, Increase, Cry, End"], 
+      answer: 0, 
+      exp: "Prva pomoć: odmor, led, kompresija, elevacija. Danas se sve više ide na PEACE & LOVE, ali RICE je i dalje osnova." },
+
+    { q: "Kada smiješ nastaviti trenirati s blagom boli?", 
+      options: ["Nikad – bol je stop znak", "Ako je bol ≤ 3/10 i ne pogoršava se tijekom ni nakon treninga", "Ako možeš stisnuti zube"], 
+      answer: 1, 
+      exp: "Pravilo 0-3/10: ako bol ostane ista ili se smanjuje tijekom serija i nema je sljedeći dan – možeš oprezno nastaviti." },
+
+    { q: "Zašto se ozljede koljena često događaju kod čučnja?", 
+      options: ["Valgus koljena (koljena padaju unutra)", "Preširok stav", "Preuski stav"], 
+      answer: 0, 
+      exp: "Kad koljena 'pobjegnu' unutra, ogroman stres ide na ACL, MCL i meniskus. Gledaj da koljena idu u smjeru prstiju!" },
+
+    { q: "Što je najgori način zagrijavanja prije teškog treninga?", 
+      options: ["5 min laganog kardio + par serija s praznom šipkom", "Odmah max težina", "Statično istezanje 20 min"], 
+      answer: 2, 
+      exp: "Statičko istezanje prije teškog dizanja smanjuje snagu i povećava rizik od ozljede. Dinamičko zagrijavanje je kralj!" },
+
+    { q: "Koliko sna trebaš da bi smanjio rizik od ozljede?", 
+      options: ["5–6 sati je OK", "7–9 sati", "Više od 10"], 
+      answer: 1, 
+      exp: "Manjak sna povećava rizik od ozljede za 60–70 %. Spavanje je najjači 'suplement' za prevenciju!" },
+
+    { q: "Koji mišić najčešće uzrokuje bol u križima ako je slab?", 
+      options: ["Gluteusi (naročito gluteus medius)", "Quadriceps", "Biceps"], 
+      answer: 0, 
+      exp: "Slabi gluteusi = loša stabilnost zdjelice → kompenzacija donjih leđa → kronična bol." },
+
+    { q: "Što je 'ego lifting'?", 
+      options: ["Dizanje težine koja je prevelika za tvoju trenutnu tehniku", "Dizanje ispred ogledala", "Dizanje za Instagram"], 
+      answer: 0, 
+      exp: "Najbrži put do ozljede. Težina koju ne možeš kontrolirati u punom ROM-u ti ne pripada još." },
+
+    { q: "Kada trebaš uzeti deload tjedan?", 
+      options: ["Svakih 4–8 tjedana ili kad osjetiš pad snage/umora", "Nikad", "Samo kad si ozlijeđen"], 
+      answer: 0, 
+      exp: "Planirani deload smanjuje rizik od pretreniranosti i ozljeda za 50 % i više." },
+
+    { q: "Najbolji savjet koji će te sačuvati od 90 % ozljeda?", 
+      options: ["Nauči savršenu tehniku prije nego kreneš dizati teško", "Uzimaj kolagen", "Treniraj svaki dan do otkaza"], 
+      answer: 0, 
+      exp: "Tehnika > težina. Uvijek. Oni koji dugo i zdravo dižu znaju to pravilo bolje od ičega." }
+  ];
+
+  let current = 0, score = 0;
+  const progressBar = document.getElementById("progress");
+  const questionText = document.getElementById("questionText");
+  const optionsDiv = document.getElementById("options");
+  const explanationDiv = document.getElementById("explanation");
+  const nextBtn = document.getElementById("nextBtn");
+  const restartBtn = document.getElementById("restartBtn");
+  const resultDiv = document.getElementById("result");
+  const finalScore = document.getElementById("finalScore");
+  const motivation = document.getElementById("motivation");
+  const questionNum = document.getElementById("questionNum");
+
+  function startQuiz() {
+    current = 0; score = 0;
+    resultDiv.style.display = "none";
+    nextBtn.style.display = "none";
+    showQuestion();
+  }
+
+  function showQuestion() {
+    const q = questions[current];
+    questionNum.textContent = `Pitanje ${current + 1} od ${questions.length}`;
+    questionText.textContent = q.q;
+    optionsDiv.innerHTML = "";
+    explanationDiv.style.display = "none";
+
+    q.options.forEach((opt, i) => {
+      const btn = document.createElement("button");
+      btn.classList.add("option-btn");
+      btn.textContent = opt;
+      btn.onclick = () => selectAnswer(i, btn, q);
+      optionsDiv.appendChild(btn);
+    });
+
+    progressBar.style.width = `${((current + 1) / questions.length) * 100}%`;
+  }
+
+  function selectAnswer(selected, btn, q) {
+    const buttons = optionsDiv.querySelectorAll(".option-btn");
+    buttons.forEach(b => b.disabled = true);
+
+    if (selected === q.answer) {
+      btn.classList.add("correct");
+      score++;
+    } else {
+      btn.classList.add("wrong");
+      buttons[q.answer].classList.add("correct");
+    }
+
+    explanationDiv.textContent = q.exp;
+    explanationDiv.style.display = "block";
+    nextBtn.style.display = "block";
+  }
+
+  function nextQuestion() {
+    current++;
+    if (current < questions.length) {
+      showQuestion();
+      nextBtn.style.display = "none";
+    } else {
+      showResult();
+    }
+  }
+
+  function showResult() {
+    document.getElementById("quiz").innerHTML = "";
+    nextBtn.style.display = "none";
+    restartBtn.style.display = "block";
+    resultDiv.style.display = "block";
+
+    finalScore.textContent = `${score}/${questions.length}`;
+
+    if (score === questions.length) motivation.textContent = "Željezni čovjek! Ozljede te neće ni taknuti! 🛡️🏆";
+    else if (score >= questions.length * 0.8) motivation.textContent = "Odlično! Znaš kako ostati zdrav i jak godinama! 🔥";
+    else if (score >= questions.length * 0.6) motivation.textContent = "Vrlo dobro! Još malo i bit ćeš neuništiv! 💪";
+    else if (score >= questions.length * 0.4) motivation.textContent = "Dobar početak! Sada znaš gdje trebaš poraditi da te ozljede zaobilaze.";
+    else motivation.textContent = "Nema veze! Ozljede su najbolji učitelji – vrati se, nauči i diži pametnije! 🩺";
+  }
+
+  function restartQuiz() {
+    restartBtn.style.display = "none";
+    startQuiz();
+  }
+
+  startQuiz();
+</script>
+
+</body>
+</html>

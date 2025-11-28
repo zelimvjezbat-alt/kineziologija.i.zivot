@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prehrana oko treninga | Kinesiology is Science</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0e17;
+            --text: #f0f4fa;
+            --primary: #00d4aa;
+            --accent: #1e90ff;
+            --card-bg: rgba(255, 255, 255, 0.06);
+            --card-hover: rgba(0, 212, 170, 0.15);
+            --border: rgba(0, 212, 170, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--bg) 0%, #0f1a2e 100%);
+            color: var(--text);
+            font-family: 'Inter', Arial, sans-serif;
+            line-height: 1.7;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            animation: fadeIn 1s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 2rem;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: var(--accent);
+            transform: translateX(-5px);
+        }
+
+        .back-link::before {
+            content: "← ";
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: #b0c4de;
+            font-size: 1.2rem;
+        }
+
+        section {
+            margin-bottom: 3rem;
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        h2::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 6px;
+            height: 6px;
+            background: var(--primary);
+            border-radius: 50%;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 1rem;
+        }
+
+        th {
+            background: rgba(0, 212, 170, 0.1);
+            color: var(--primary);
+            text-align: left;
+            padding: 1rem;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            vertical-align: top;
+        }
+
+        tr:hover {
+            background: rgba(0, 212, 170, 0.05);
+        }
+
+        .highlight {
+            background: rgba(0, 212, 170, 0.1);
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .note {
+            font-size: 0.9rem;
+            color: #b0c4de;
+            font-style: italic;
+            margin-top: 0.5rem;
+        }
+
+        .tip-box {
+            background: rgba(30, 144, 255, 0.1);
+            border-left: 4px solid var(--accent);
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .tip-box strong {
+            color: var(--accent);
+        }
+
+        .key {
+            background: rgba(0, 212, 170, 0.15);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            border: 1px solid var(--border);
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        .key strong {
+            color: var(--primary);
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.2rem; }
+            h2 { font-size: 1.5rem; }
+            table, th, td { display: block; }
+            th, td { border: none; }
+            th { background: rgba(0, 212, 170, 0.1); border-radius: 8px 8px 0 0; }
+            td { border-bottom: 1px solid var(--border); }
+            td:last-child { border-bottom: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="landing.html" class="back-link">Povratak na početnu</a>
+        
+        <header>
+            <h1>Prehrana oko treninga</h1>
+            <p class="subtitle">Znanstveno utemeljene smjernice za maksimalne performanse i oporavak (ISSN, ACSM, 2023–2025)</p>
+        </header>
+
+        <!-- PRIJE -->
+        <section>
+            <h2>1. PRIJE TRENINGA (1–4 sata prije)</h2>
+            <table>
+                <tr><th>Vrijeme</th><th>Što jesti</th><th>Primjer (za ~70 kg)</th></tr>
+                <tr>
+                    <td><span class="highlight">2–4 sata prije</span></td>
+                    <td>Uravnoteženi obrok (UH + proteini + malo masti)</td>
+                    <td>Zobena kaša s bananom, jogurtom i kikiriki maslacem<br><em>ili</em> puretina na integralnom kruhu + avokado</td>
+                </tr>
+                <tr>
+                    <td><span class="highlight">1–2 sata prije</span></td>
+                    <td>Lagani obrok bogat UH</td>
+                    <td>Smoothie: banana + whey + med<br><em>ili</em> rižini kolači s marmeladom</td>
+                </tr>
+                <tr>
+                    <td><span class="highlight">&lt;1 sat prije</span></td>
+                    <td>Brzi UH (tekući/gel)</td>
+                    <td>Sportski napitak (30–60 g UH)<br><em>ili</em> datulje (2–3 kom)</td>
+                </tr>
+            </table>
+            <div class="key">
+                <strong>Ključ:</strong> 1–4 g UH/kg 1–4 h prije. Proteini: 0.3 g/kg.
+            </div>
+        </section>
+
+        <!-- TIJEKOM -->
+        <section>
+            <h2>2. TIJEKOM TRENINGA (&gt;60–90 min)</h2>
+            <table>
+                <tr><th>Trajanje</th><th>Što uzimati</th></tr>
+                <tr><td><span class="highlight">60–90 min</span></td><td>30–60 g UH/sat (napitak, gel, banana)</td></tr>
+                <tr><td><span class="highlight">&gt;90 min</span></td><td>60–90 g UH/sat (glukoza + fruktoza)</td></tr>
+            </table>
+            <div class="note">Trening snage &lt;60 min → nije potrebno.</div>
+        </section>
+
+        <!-- NAKON -->
+        <section>
+            <h2>3. NAKON TRENINGA (0–2 sata nakon)</h2>
+            <table>
+                <tr><th>Vrijeme</th><th>Što jesti</th><th>Primjer</th></tr>
+                <tr>
+                    <td><span class="highlight">0–30 min</span></td>
+                    <td>Brzi UH + proteini (3:1)</td>
+                    <td>Whey shake + banana<br><em>ili</em> čokoladno mlijeko</td>
+                </tr>
+                <tr>
+                    <td><span class="highlight">1–2 sata</span></td>
+                    <td>Puni obrok</td>
+                    <td>Piletina + riža + povrće<br><em>ili</em> losos + slatki krumpir</td>
+                </tr>
+            </table>
+            <div class="key">
+                <strong>Ključ:</strong> 1.2–2.0 g UH/kg + 0.3–0.5 g proteina/kg u prva 2 sata.
+            </div>
+        </section>
+
+        <!-- POSEBNI SLUČAJEVI -->
+        <section>
+            <h2>4. POSEBNI SLUČAJEVI</h2>
+            <table>
+                <tr><th>Situacija</th><th>Prilagodba</th></tr>
+                <tr><td>Jutarnji trening (natašte)</td><td>30–60 g UH 15–30 min prije + kofein</td></tr>
+                <tr><td>Dva treninga u danu</td><td>Obrok odmah nakon 1. → punjenje glikogena</td></tr>
+                <tr><td>Mršavljenje</td><td>Smanji UH, zadrži proteine (1.6–2.2 g/kg/dan)</td></tr>
+                <tr><td>Vegetarijanci/vegani</td><td>Biljni protein + riža/grah za kompletan profil</td></tr>
+            </table>
+        </section>
+
+        <!-- SAVJETI -->
+        <section>
+            <h2>5. PRAKTIČNI SAVJETI</h2>
+            <ul>
+                <li>Ne treniraj gladan, ali ni s punim želucem.</li>
+                <li>Tekuća hrana (shakeovi) = brže probavljanje.</li>
+                <li>Kofein: 3–6 mg/kg 60 min prije → bolje performanse.</li>
+                <li>Hidratacija: 500–1000 ml vode 2–4 h prije + 150–300 ml svakih 15–20 min tijekom.</li>
+            </ul>
+            <div class="tip-box">
+                <strong>Pro tip:</strong> Trening u 18h → obrok u 15h (riža + piletina), 30 min prije: shake s bananom.
+            </div>
+        </section>
+
+        <!-- ZAKLJUČAK -->
+        <section>
+            <h2>Zaključak</h2>
+            <div class="key">
+                <strong>2–3 h prije:</strong> puni obrok<br>
+                <strong>&lt;1 h prije:</strong> brzi UH<br>
+                <strong>0–2 h poslije:</strong> UH + proteini (3:1)
+            </div>
+        
+        </section>
+    </div>
+</body>
+</html>

@@ -1,0 +1,313 @@
+<!doctype html>
+<html lang="hr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Disanje u treningu – Kviz</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --accent: #4ade80;
+      --text: #e2e8f0;
+      --correct: #86efac;
+      --wrong: #fca5a5;
+    }
+    body {
+      background: linear-gradient(135deg, var(--bg) 0%, #1e3a5f 100%);
+      color: var(--text);
+      font-family: 'Montserrat', sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .container {
+      background: var(--card);
+      max-width: 700px;
+      width: 100%;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+      text-align: center;
+    }
+    h1 {
+      font-family: 'Playfair Display', serif;
+      color: var(--accent);
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+    .progress-container {
+      background: #334155;
+      height: 12px;
+      border-radius: 6px;
+      margin: 20px 0;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      background: var(--accent);
+      width: 0%;
+      transition: width 0.4s ease;
+    }
+    .question-number {
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+      color: #94a3b8;
+    }
+    .question {
+      font-size: 1.4rem;
+      margin: 25px 0;
+      line-height: 1.5;
+    }
+    .options {
+      display: grid;
+      gap: 12px;
+      margin: 20px 0;
+    }
+    .option-btn {
+      background: #334155;
+      color: var(--text);
+      border: none;
+      padding: 14px 20px;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-align: left;
+    }
+    .option-btn:hover { background: #475569; }
+    .option-btn.correct { background: var(--correct); color: #000; }
+    .option-btn.wrong { background: var(--wrong); color: #000; }
+    .option-btn:disabled { cursor: not-allowed; opacity: 0.8; }
+
+    .explanation {
+      margin-top: 20px;
+      padding: 15px;
+      background: rgba(74, 222, 128, 0.15);
+      border-radius: 10px;
+      font-size: 0.95rem;
+      display: none;
+    }
+    #nextBtn, #restartBtn {
+      background: var(--accent);
+      color: #000;
+      font-weight: bold;
+      padding: 12px 30px;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      margin-top: 20px;
+      display: none;
+    }
+    #nextBtn:hover, #restartBtn:hover { background: #86efac; }
+
+    .final-score {
+      font-size: 2rem;
+      margin: 20px 0;
+      color: var(--accent);
+    }
+    .back {
+      display: inline-block;
+      margin-top: 30px;
+      color: #94a3b8;
+      text-decoration: none;
+    }
+    .back:hover { color: var(--accent); }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Disanje u treningu</h1>
+  <div class="progress-container"><div class="progress-bar" id="progress"></div></div>
+  <div class="question-number" id="questionNum"></div>
+
+  <div id="quiz">
+    <div class="question" id="questionText"></div>
+    <div class="options" id="options"></div>
+    <div class="explanation" id="explanation"></div>
+  </div>
+
+  <button id="nextBtn" onclick="nextQuestion()">Sljedeće pitanje →</button>
+  <button id="restartBtn" onclick="restartQuiz()">Pokreni ponovo</button>
+
+  <div id="result" style="display:none;">
+    <h2 class="final-score" id="finalScore"></h2>
+    <p id="motivation"></p>
+  </div>
+
+  <a href="index.html" class="back">← Povratak na kategorije</a>
+</div>
+
+<script>
+  const questions = [
+    { q: "Što se događa ako zadržavaš dah tijekom teškog dizanja (Valsalva manevar)?", 
+      options: ["Povećava se intraabdominalni tlak i stabilnost kralježnice", "Smanjuje snaga", "Brže dolazi do umora"], 
+      answer: 0, 
+      exp: "Valsalva manevar (zadržavanje daha) stvara čvrsti 'pojas' od zraka u trbuhu i povećava stabilnost core-a. Koristi se kod maksimalnih i sub-maksimalnih dizanja." },
+
+    { q: "Kada trebaš izdahnuti kod bench pressa?", 
+      options: ["Dok spuštaš šipku", "Dok guraš šipku od prsa (koncentrična faza)", "Svejedno je"], 
+      answer: 1, 
+      exp: "Opće pravilo: izdah u naporu (koncentrična faza), udah kad popuštaš (ekscentrična faza). Kod bench pressa – izdah dok guraš šipku gore." },
+
+    { q: "Kod čučnja – kada udahnuti, a kada izdahnuti?", 
+      options: ["Udahnuti pri spuštanju, izdahnuti pri ustajanju", "Izdahnuti pri spuštanju, udahnuti pri ustajanju", "Zadržati dah cijelo vrijeme"], 
+      answer: 0, 
+      exp: "Udah pri spuštanju (brace core), zadrži dah na dnu i na početku ustajanja, izdah tek kad si blizu vrha ili kad si već 'zaključan'." },
+
+    { q: "Zašto je važno duboko disati između serija?", 
+      options: ["Brže se rješavamo CO₂ i brže vraćamo kisik u mišiće", "Samo da se smirimo", "Nije važno"], 
+      answer: 0, 
+      exp: "Duboko disanje (dijafragma) pomaže brzo vratiti O₂, smanjiti laktat i sniziti puls – ključno za što bolji performans u sljedećoj seriji." },
+
+    { q: "Što je 'paradoksalno disanje' i zašto je loše?", 
+      options: ["Disanje u prsa umjesto u trbuh", "Disanje kroz usta", "Prebrzo disanje"], 
+      answer: 0, 
+      exp: "Kad dišeš samo u prsa (grudi se dižu), a trbuh se ne pomiče – slabije aktiviraš dijafragmu i manje stabiliziraš core. Uči disati 'u trbuh'." },
+
+    { q: "Kod zgibova i veslanja – kada izdahnuti?", 
+      options: ["Dok povlačiš prema sebi (koncentrična faza)", "Dok popuštaš (ekscentrična faza)", "Zadržati dah"], 
+      answer: 0, 
+      exp: "Izdah u fazi povlačenja (kad savladaš otpor), udah kad se kontrolirano spuštaš ili vraćaš." },
+
+    { q: "Je li bolje disati na nos ili na usta tijekom teškog treninga?", 
+      options: ["Nos je uvijek bolji", "Usta kad je intenzitet visok", "Nema razlike"], 
+      answer: 1, 
+      exp: "Za vrijeme maksimalnog napora usta su nužna jer možeš unijeti puno više zraka u kratkom vremenu. Nos je super za zagrijavanje i između serija." },
+
+    { q: "Što je 'brace' ili 'core bracing' prije teškog dizanja?", 
+      options: ["Udahnuti duboko u trbuh i napeti core kao da će te netko udariti", "Samo napeti trbušnjake", "Izdahnuti potpuno"], 
+      answer: 0, 
+      exp: "360° napetost trupa – udah u trbuh (ne u prsa), napni trbuh, gluteuse i leđa. To je osnova sigurnog i jakog dizanja." },
+
+    { q: "Zašto ljudi često izgube svijest kod maksimalnog mrtvog dizanja ili čučnja?", 
+      options: ["Zbog previsokog krvnog tlaka i pada tlaka nakon izdaha", "Zbog manjka kisika", "Zbog pregrijavanja"], 
+      answer: 0, 
+      exp: "Prejako i predugo zadržavanje daha (Valsalva) + nagli izdah = pad krvnog tlaka i 'blackout'. Zato uvijek imaj spottera kod maxa!" },
+
+    { q: "Kako najbrže sniziti puls između teških serija?", 
+      options: ["Duboko dijafragmalno disanje (4 sek udah – 6 sek izdah)", "Hiperventilacija", "Zadržavanje daha"], 
+      answer: 0, 
+      exp: "Sporo, duboko disanje aktivira parasimpatikus i brzo smiruje srce. Probaj 'box breathing' 4-4-4-4." },
+
+    { q: "Kod HIIT treninga i sprintova – koji tip disanja je najbolji?", 
+      options: ["Kontrolirano ritmičko disanje", "Samo kroz usta, što brže i dublje", "Zadržavanje daha"], 
+      answer: 1, 
+      exp: "Kad ideš all-out, disanje mora biti eksplozivno i kroz usta – tijelo treba ogromne količine kisika u sekundi." },
+
+    { q: "Što je 'hiss' tehnika kod dizanja?", 
+      options: ["Forsirani izdah kroz zube ('tssss') dok dižeš", "Duboki uzdah", "Brzo disanje"], 
+      answer: 0, 
+      exp: "Omogućuje da zadržiš intraabdominalni tlak, a istovremeno kontrolirano ispuštaš zrak – sigurnije kod vrlo teških serija." },
+
+    { q: "Koji mišić je glavni za pravilno duboko disanje?", 
+      options: ["Rectus abdominis", "Dijafragma", "Interkostalni mišići"], 
+      answer: 1, 
+      exp: "Dijafragma je primarni mišić disanja. Kad je slaba ili ne koristiš je, disanje je plitko i manje učinkovito." },
+
+    { q: "Zašto profesionalni powerlifteri često viču ili glasno izdišu na max pokušaju?", 
+      options: ["Da aktiviraju živčani sustav i povećaju snagu", "Samo za dramu", "Da uplaše protivnika"], 
+      answer: 0, 
+      exp: "Glasni izdah (tzv. 'explosive exhale') aktivira simpatikus i može dati 5–10 % više snage u tom trenutku." },
+
+    { q: "Najbolji savjet za disanje koji možeš odmah primijeniti na svakom treningu?", 
+      options: ["Nikad ne zadržavaj dah duže od 2–3 sekunde", "Diši samo na nos", "Izdahni uvijek u fazi najvećeg napora"], 
+      answer: 2, 
+      exp: "Zlatno pravilo koje vrijedi za 95 % vježbi: izdah kad savladaš otpor (guraš/povlačiš), udah kad popuštaš." }
+  ];
+
+  let current = 0, score = 0;
+  const progressBar = document.getElementById("progress");
+  const questionText = document.getElementById("questionText");
+  const optionsDiv = document.getElementById("options");
+  const explanationDiv = document.getElementById("explanation");
+  const nextBtn = document.getElementById("nextBtn");
+  const restartBtn = document.getElementById("restartBtn");
+  const resultDiv = document.getElementById("result");
+  const finalScore = document.getElementById("finalScore");
+  const motivation = document.getElementById("motivation");
+  const questionNum = document.getElementById("questionNum");
+
+  function startQuiz() {
+    current = 0; score = 0;
+    resultDiv.style.display = "none";
+    nextBtn.style.display = "none";
+    showQuestion();
+  }
+
+  function showQuestion() {
+    const q = questions[current];
+    questionNum.textContent = `Pitanje ${current + 1} od ${questions.length}`;
+    questionText.textContent = q.q;
+    optionsDiv.innerHTML = "";
+    explanationDiv.style.display = "none";
+
+    q.options.forEach((opt, i) => {
+      const btn = document.createElement("button");
+      btn.classList.add("option-btn");
+      btn.textContent = opt;
+      btn.onclick = () => selectAnswer(i, btn, q);
+      optionsDiv.appendChild(btn);
+    });
+
+    progressBar.style.width = `${((current + 1) / questions.length) * 100}%`;
+  }
+
+  function selectAnswer(selected, btn, q) {
+    const buttons = optionsDiv.querySelectorAll(".option-btn");
+    buttons.forEach(b => b.disabled = true);
+
+    if (selected === q.answer) {
+      btn.classList.add("correct");
+      score++;
+    } else {
+      btn.classList.add("wrong");
+      buttons[q.answer].classList.add("correct");
+    }
+
+    explanationDiv.textContent = q.exp;
+    explanationDiv.style.display = "block";
+    nextBtn.style.display = "block";
+  }
+
+  function nextQuestion() {
+    current++;
+    if (current < questions.length) {
+      showQuestion();
+      nextBtn.style.display = "none";
+    } else {
+      showResult();
+    }
+  }
+
+  function showResult() {
+    document.getElementById("quiz").innerHTML = "";
+    nextBtn.style.display = "none";
+    restartBtn.style.display = "block";
+    resultDiv.style.display = "block";
+
+    finalScore.textContent = `${score}/${questions.length}`;
+
+    if (score === questions.length) motivation.textContent = "Majstore dišeš kao profesionalac! Tvoj core je čelični, a tehnika besprijekorna! 🏆💨";
+    else if (score >= questions.length * 0.8) motivation.textContent = "Odlično! Već dišeš kao iskusni lifter – još malo i bit ćeš savršen! 🔥";
+    else if (score >= questions.length * 0.6) motivation.textContent = "Vrlo dobro! Disanje ti je solidno, samo još malo vježbe i letiš! 🚀";
+    else if (score >= questions.length * 0.4) motivation.textContent = "Dobar početak! Sada znaš gdje trebaš poraditi – diši pametnije i dizat ćeš teže! 💪";
+    else motivation.textContent = "Diši duboko i vrati se – svaki pravi lifter je počeo ovdje! Idemo ponovo! 💚";
+  }
+
+  function restartQuiz() {
+    restartBtn.style.display = "none";
+    startQuiz();
+  }
+
+  startQuiz();
+</script>
+
+</body>
+</html>

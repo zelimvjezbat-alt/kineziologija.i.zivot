@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="hr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kviz o kineziologiji i mišićima</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --accent: #4ade80;
+      --text: #e2e8f0;
+      --correct: #86efac;
+      --wrong: #fca5a5;
+    }
+    body {
+      background: linear-gradient(135deg, var(--bg) 0%, #1e3a5f 100%);
+      color: var(--text);
+      font-family: 'Montserrat', sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .container {
+      background: var(--card);
+      max-width: 700px;
+      width: 100%;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+      text-align: center;
+    }
+    h1 {
+      font-family: 'Playfair Display', serif;
+      color: var(--accent);
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+    .progress-container {
+      background: #334155;
+      height: 12px;
+      border-radius: 6px;
+      margin: 20px 0;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      background: var(--accent);
+      width: 0%;
+      transition: width 0.4s ease;
+    }
+    .question-number {
+      font-size: 1.1rem;
+      margin-bottom: 10px;
+      color: #94a3b8;
+    }
+    .question {
+      font-size: 1.4rem;
+      margin: 25px 0;
+      line-height: 1.5;
+    }
+    .options {
+      display: grid;
+      gap: 12px;
+      margin: 20px 0;
+    }
+    .option-btn {
+      background: #334155;
+      color: var(--text);
+      border: none;
+      padding: 14px 20px;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-align: left;
+    }
+    .option-btn:hover { background: #475569; }
+    .option-btn.correct { background: var(--correct); color: #000; }
+    .option-btn.wrong { background: var(--wrong); color: #000; }
+    .option-btn:disabled { cursor: not-allowed; opacity: 0.8; }
+
+    .explanation {
+      margin-top: 20px;
+      padding: 15px;
+      background: rgba(74, 222, 128, 0.15);
+      border-radius: 10px;
+      font-size: 0.95rem;
+      display: none;
+    }
+    #nextBtn, #restartBtn {
+      background: var(--accent);
+      color: #000;
+      font-weight: bold;
+      padding: 12px 30px;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      margin-top: 20px;
+      display: none;
+    }
+    #nextBtn:hover, #restartBtn:hover { background: #86efac; }
+
+    .final-score {
+      font-size: 2rem;
+      margin: 20px 0;
+      color: var(--accent);
+    }
+    .back {
+      display: inline-block;
+      margin-top: 30px;
+      color: #94a3b8;
+      text-decoration: none;
+    }
+    .back:hover { color: var(--accent); }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Kviz o kineziologiji i mišićima</h1>
+  <div class="progress-container"><div class="progress-bar" id="progress"></div></div>
+  <div class="question-number" id="questionNum"></div>
+
+  <div id="quiz">
+    <div class="question" id="questionText"></div>
+    <div class="options" id="options"></div>
+    <div class="explanation" id="explanation"></div>
+  </div>
+
+  <button id="nextBtn" onclick="nextQuestion()">Sljedeće pitanje →</button>
+  <button id="restartBtn" onclick="restartQuiz()">Pokreni ponovo</button>
+
+  <div id="result" style="display:none;">
+    <h2 class="final-score" id="finalScore"></h2>
+    <p id="motivation"></p>
+  </div>
+
+  <a href="index.html" class="back">← Povratak na kategorije</a>
+</div>
+
+<script>
+  const questions = [
+    { q: "Koji mišić je primarni pokretač kod skleka?", options: ["Biceps", "Pectoralis major", "Quadriceps"], answer: 1, exp: "Prsni mišić (pectoralis major) je glavni mišić koji radi kod klasičnih sklekova." },
+    { q: "Koji je najveći mišić u ljudskom tijelu po volumenu?", options: ["Latissimus dorsi", "Gluteus maximus", "Quadriceps femoris"], answer: 1, exp: "Gluteus maximus je najveći i najjači mišić – ključan za hodanje, trčanje i ustajanje." },
+    { q: "Koji mišić omogućuje ekstenziju lakta (ispravljanje ruke)?", options: ["Biceps brachii", "Triceps brachii", "Brachialis"], answer: 1, exp: "Triceps je jedini mišić koji ispravlja lakat." },
+    { q: "Koji se mišić najviše aktivira kod zgibova?", options: ["Pectoralis major", "Latissimus dorsi", "Trapezius"], answer: 1, exp: "Latissimus dorsi ('latovi') su glavni pokretači kod povlačenja tijela prema šipci." },
+    { q: "Koliko mišića sudjeluje u punom čučnju (squat)?", options: ["Samo 4–5", "Preko 200", "Oko 20"], answer: 1, exp: "U čučnju radi preko 200 mišića – od stopala do vrata!" },
+    { q: "Koji mišić stabilizira trup kod mrtvog dizanja?", options: ["Rectus abdominis", "Erector spinae", "Oba odgovora"], answer: 2, exp: "Erector spinae (mišići uz kralježnicu) su ključni za sigurno držanje leđa ravno. Rectus abdominis poznat kao 'six pack' ključan za stabilnost prednjeg dijela trupa. " },
+    { q: "Koji mišić je najjači po jedinici površine poprečnog presjeka?", options: ["Quadriceps", "Masseter (žvačni mišić)", "Gluteus"], answer: 1, exp: "Žvačni mišić može stvoriti silu preko 900 N – zato možemo gristi jako tvrde stvari!" },
+    { q: "Koliko tipova mišićnih vlakana imamo?", options: ["1", "2", "3 "], answer: 2, exp: "Tip I (spora, izdržljiva), Tip IIa i Tip IIx (brza, eksplozivna)." },
+    { q: "Koji hormon najviše utječe na sintezu proteina u mišićima?", options: ["Adrenalin", "Testosteron", "Kortizol"], answer: 1, exp: "Testosteron je ključan anabolički hormon za rast mišića." },
+    { q: "Što se događa s mišićnim jezgrama nakon prestanka treninga?", options: ["Nestanu zauvijek", "Ostanu godinama", "Smanje se za 50%"], answer: 1, exp: "Mišićna memorija – jezgre (myonuclei) ostaju i omogućuju brzi povratak snage!" },
+    { q: "Koji mišić je najvažniji za stabilnost ramena?", options: ["Deltoid", "Rotator cuff grupa", "Pectoralis"], answer: 1, exp: "Rotator cuff (4 mala mišića) drže glavu nadlaktične kosti u zglobnoj čašici." },
+    { q: "Koliko ATP molekula može pohraniti mišić u bilo kojem trenutku?", options: ["Milijune", "Samo za 2–3 sekunde rada", "Za 10 minuta"], answer: 1, exp: "Zato eksplozivne aktivnosti traju samo par sekundi bez drugih sustava." },
+    { q: "Koji mišić se najviše aktivira kod plank vježbe?", options: ["Rectus abdominis", "Transversus abdominis", "Oba jednako"], answer: 1, exp: "Transversus abdominis je duboki mišić koji radi kao 'prirodni pojas' za stabilnost." },
+    { q: "Koji je najduži mišić u tijelu?", options: ["Sartorius", "Iliopsoas", "Adductor longus"], answer: 0, exp: "Sartorius ide od kuka do koljena – pomaže ukrštanje nogu." },
+    { q: "Što znači 'muscle pump' efekt?", options: ["Povećan dotok krvi u mišić tijekom treninga", "Bol u mišićima", "Gubitak snage"], answer: 0, exp: "Mišići se napune krvlju – zato izgledaju veći i čvršći tijekom treninga!" }
+  ];
+
+  let current = 0, score = 0;
+  const progressBar = document.getElementById("progress");
+  const questionText = document.getElementById("questionText");
+  const optionsDiv = document.getElementById("options");
+  const explanationDiv = document.getElementById("explanation");
+  const nextBtn = document.getElementById("nextBtn");
+  const restartBtn = document.getElementById("restartBtn");
+  const resultDiv = document.getElementById("result");
+  const finalScore = document.getElementById("finalScore");
+  const motivation = document.getElementById("motivation");
+  const questionNum = document.getElementById("questionNum");
+
+  function startQuiz() {
+    current = 0; score = 0;
+    resultDiv.style.display = "none";
+    nextBtn.style.display = "none";
+    showQuestion();
+  }
+
+  function showQuestion() {
+    const q = questions[current];
+    questionNum.textContent = `Pitanje ${current + 1} od ${questions.length}`;
+    questionText.textContent = q.q;
+    optionsDiv.innerHTML = "";
+    explanationDiv.style.display = "none";
+
+    q.options.forEach((opt, i) => {
+      const btn = document.createElement("button");
+      btn.classList.add("option-btn");
+      btn.textContent = opt;
+      btn.onclick = () => selectAnswer(i, btn, q);
+      optionsDiv.appendChild(btn);
+    });
+
+    progressBar.style.width = `${((current + 1) / questions.length) * 100}%`;
+  }
+
+  function selectAnswer(selected, btn, q) {
+    const buttons = optionsDiv.querySelectorAll(".option-btn");
+    buttons.forEach(b => b.disabled = true);
+
+    if (selected === q.answer) {
+      btn.classList.add("correct");
+      score++;
+    } else {
+      btn.classList.add("wrong");
+      buttons[q.answer].classList.add("correct");
+    }
+
+    explanationDiv.textContent = q.exp;
+    explanationDiv.style.display = "block";
+    nextBtn.style.display = "block";
+  }
+
+  function nextQuestion() {
+    current++;
+    if (current < questions.length) {
+      showQuestion();
+      nextBtn.style.display = "none";
+    } else {
+      showResult();
+    }
+  }
+
+  function showResult() {
+    document.getElementById("quiz").innerHTML = "";
+    nextBtn.style.display = "none";
+    restartBtn.style.display = "block";
+    resultDiv.style.display = "block";
+
+    finalScore.textContent = `${score}/${questions.length}`;
+
+    if (score === questions.length) motivation.textContent = "Fenomenalno! Ti si pravi kineziološki ninja! 🥷💪";
+    else if (score >= questions.length * 0.8) motivation.textContent = "Odlično! Samo još malo i bit ćeš ekspert! 🚀";
+    else if (score >= questions.length * 0.6) motivation.textContent = "Vrlo dobro! Nastavi učiti, super si na putu! 🔥";
+    else if (score >= questions.length * 0.4) motivation.textContent = "Solidan početak! Svaki dan malo uči i bit ćeš sve bolji! 💪";
+    else motivation.textContent = "Nema veze! Svaki početak je težak. Vrati se i pročitaj činjenice pa pokušaj ponovo! 💚";
+  }
+
+  function restartQuiz() {
+    restartBtn.style.display = "none";
+    startQuiz();
+  }
+
+  // Pokretanje kviza
+  startQuiz();
+</script>
+
+</body>
+</html>
