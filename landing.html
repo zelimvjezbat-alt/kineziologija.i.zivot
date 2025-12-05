@@ -17,6 +17,7 @@
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
+
     body {
       font-family: 'Inter', sans-serif;
       background: linear-gradient(135deg, #0a0e17 0%, #0f1a2e 70%, #112240 100%);
@@ -66,6 +67,7 @@
       font-weight: 800;
       background: linear-gradient(90deg, #00d4aa, #1e90ff, #00d4aa);
       -webkit-background-clip: text;
+      background-clip: text;
       -webkit-text-fill-color: transparent;
       margin-bottom: 0.8rem;
       letter-spacing: -1.5px;
@@ -139,7 +141,7 @@
       position: fixed;
       top: 16px;
       right: 16px;
-      background: var(--accent);
+      background: rgba(30, 144, 255, 0.9);
       color: white;
       padding: 10px 16px;
       border-radius: 50px;
@@ -161,8 +163,8 @@
       width: 300px;
       max-height: 400px;
       overflow-y: auto;
-      background: var(--card);
-      color: var(--text);
+      background: rgba(255, 255, 255, 0.95);
+      color: var(--bg);
       padding: 16px;
       border-radius: 18px;
       box-shadow: 0 8px 24px rgba(0,0,0,0.3);
@@ -198,7 +200,90 @@
       background: var(--primary);
     }
 
-    /* Animacije */
+    /* Kalkulatori (inline) */
+    .calc-modal {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(10, 14, 23, 0.95);
+      backdrop-filter: blur(12px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      z-index: 1000;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .calc-content {
+      background: var(--card);
+      border: 1px solid rgba(0, 212, 170, 0.3);
+      border-radius: 24px;
+      padding: 2rem;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 20px 50px rgba(0, 212, 170, 0.2);
+    }
+
+    .calc-content h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      font-size: 1.8rem;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .calc-input {
+      width: 100%;
+      padding: 14px;
+      margin: 12px 0;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(0,212,170,0.4);
+      border-radius: 12px;
+      color: white;
+      font-size: 1.1rem;
+    }
+
+    .calc-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    .result {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: rgba(0,212,170,0.15);
+      border-radius: 12px;
+      font-size: 1.2rem;
+      text-align: center;
+      min-height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .close-calc {
+      position: absolute;
+      top: 1rem;
+      right: 1.5rem;
+      font-size: 2rem;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
     @keyframes fadeInUp {
       from { opacity: 0; transform: translateY(40px); }
       to { opacity: 1; transform: translateY(0); }
@@ -209,7 +294,6 @@
       50% { box-shadow: 0 0 60px rgba(0, 212, 170, 0.5); }
     }
 
-    /* RESPONSIVNOST */
     @media (max-width: 768px) {
       h1 { font-size: 2.8rem; }
       .subtitle { font-size: 1.2rem; }
@@ -223,6 +307,7 @@
       h1 { font-size: 2.4rem; }
       .menu { grid-template-columns: 1fr; }
       .menu a span, .menu button span { font-size: 2.6rem; }
+      #help-list { width: 260px; right: 10px; top: 60px; }
     }
   </style>
 </head>
@@ -230,6 +315,7 @@
 
   <div class="container">
     <div class="logo">💪</div>
+    
     <h1>Kinesiology<br>is Science</h1>
     <p class="subtitle">
       Učite o tijelu, mišićima, pravilnim vježbama i prehrani na zabavan i znanstveni način.
@@ -252,10 +338,14 @@
         <span>🍔</span>
         Prehrana
       </a>
+
+      <!-- NOVO: BMI Kalkulator -->
       <button onclick="openCalc('bmi')">
         <span>⚖️</span>
         BMI Kalkulator
       </button>
+
+      <!-- NOVO: Dnevni unos kalorija -->
       <button onclick="openCalc('calories')">
         <span>🥗</span>
         Unos Kalorija
@@ -264,34 +354,132 @@
   </div>
 
   <!-- HELP BALONCIC -->
-  <div id="help-bubble">
-    💡 Pomoć pri vježbanju
-  </div>
+  <div id="help-bubble" onclick="toggleHelp()">❓ Pomoć pri vježbanju</div>
   <div id="help-list">
-    <h3>Popis vježbi</h3>
+    <h3>Vježbe i mišići</h3>
     <ul>
-      <li>Sklekovi - Prsa 50%, Triceps 30%, Ramena 20%</li>
-      <li>Čučnjevi - Kvadriceps 50%, Gluteusi 30%, Stražnja loža 20%</li>
-      <li>Plank - Trbušnjaci 60%, Ramena 25%, Leđa 15%</li>
-      <li>Bench press - Prsa 60%, Triceps 25%, Ramena 15%</li>
-      <li>Biceps curl - Biceps 80%, Podlaktica 20%</li>
-      <li>Lat pulldown - Leđa 50%, Biceps 30%, Ramena 20%</li>
+      <li>Sklekovi – Prsa 60%, Triceps 30%, Ramena 10%</li>
+      <li>Čučnjevi – Kvadricepsi 50%, Gluteus 30%, Listovi 20%</li>
+      <li>Plank – Core 70%, Ramena 20%, Leđa 10%</li>
+      <li>Biceps pregib – Biceps 100%</li>
+      <li>Deadlift – Leđa 40%, Gluteus 30%, Kvadricepsi 20%, Podlaktica 10%</li>
+      <li>Bench press – Prsa 50%, Triceps 30%, Ramena 20%</li>
     </ul>
-    <button onclick="closeHelp()">Zatvori</button>
+    <button onclick="toggleHelp()">Zatvori</button>
+  </div>
+
+  <!-- Kalkulatori (BMI i Kalorije) -->
+  <div id="bmi-calc" class="calc-modal">
+    <div class="calc-content">
+      <span class="close-calc" onclick="closeCalc()">×</span>
+      <h2>BMI Kalkulator</h2>
+      <input type="number" id="weight" placeholder="Težina (kg)" class="calc-input">
+      <input type="number" id="height" placeholder="Visina (cm)" class="calc-input">
+      <button onclick="calcBMI()" class="calc-btn">Izračunaj BMI</button>
+      <div id="bmi-result" class="result">Unesi podatke</div>
+    </div>
+  </div>
+
+  <div id="calories-calc" class="calc-modal">
+    <div class="calc-content">
+      <span class="close-calc" onclick="closeCalc()">×</span>
+      <h2>Dnevni Unos Kalorija</h2>
+      <input type="number" id="food-calories" placeholder="Kalorije (npr. 450)" class="calc-input">
+      <input type="text" id="food-name" placeholder="Naziv hrane (npr. Pizza)" class="calc-input">
+      <button onclick="addFood()" class="calc-btn">Dodaj u dnevnik</button>
+      <div style="margin-top:20px; max-height:300px; overflow-y:auto;">
+        <div id="food-list"></div>
+      </div>
+      <div style="margin-top:15px; font-size:1.4rem; font-weight:700; color:var(--primary);">
+        Ukupno: <span id="total-calories">0</span> kcal
+      </div>
+      <button onclick="clearDay()" style="background:#f87171; margin-top:10px;" class="calc-btn">Očisti dan</button>
+    </div>
   </div>
 
   <script>
-    const helpBubble = document.getElementById('help-bubble');
-    const helpList = document.getElementById('help-list');
+    // BMI
+    function calcBMI() {
+      const w = parseFloat(document.getElementById('weight').value);
+      const h = parseFloat(document.getElementById('height').value) / 100;
+      if (!w || !h) return document.getElementById('bmi-result').innerHTML = "Unesi težinu i visinu!";
+      const bmi = (w / (h * h)).toFixed(1);
+      let cat = bmi < 18.5 ? "Mršav" : bmi < 25 ? "Idealno" : bmi < 30 ? "Prekomjerno" : "Pretilost";
+      document.getElementById('bmi-result').innerHTML = `<strong>${bmi}</strong> → ${cat}`;
+    }
 
-    helpBubble.addEventListener('click', () => {
-      helpList.style.display = helpList.style.display === 'block' ? 'none' : 'block';
+    // Kalorije
+    let dailyCalories = JSON.parse(localStorage.getItem('daily_calories')) || [];
+    
+    function renderCalories() {
+      const list = document.getElementById('food-list');
+      list.innerHTML = '';
+      let total = 0;
+      dailyCalories.forEach((item, i) => {
+        total += item.cal;
+        const div = document.createElement('div');
+        div.style.cssText = 'padding:10px; background:rgba(255,255,255,0.05); margin:8px 0; border-radius:10px; display:flex; justify-content:space-between;';
+        div.innerHTML = `${item.name}: <strong>${item.cal} kcal</strong>
+          <button onclick="dailyCalories.splice(${i},1); saveCal(); renderCalories()" style="background:#f87171; color:white; border:none; padding:4px 8px; border-radius:8px; font-size:0.9rem;">×</button>`;
+        list.appendChild(div);
+      });
+      document.getElementById('total-calories').textContent = total;
+    }
+
+    function addFood() {
+      const name = document.getElementById('food-name').value.trim() || "Hrana";
+      const cal = parseInt(document.getElementById('food-calories').value);
+      if (!cal) return alert("Unesi kalorije!");
+      dailyCalories.push({ name, cal });
+      saveCal();
+      renderCalories();
+      document.getElementById('food-name').value = '';
+      document.getElementById('food-calories').value = '';
+    }
+
+    function saveCal() {
+      localStorage.setItem('daily_calories', JSON.stringify(dailyCalories));
+    }
+
+    function clearDay() {
+      if (confirm("Očistiti cijeli današnji unos?")) {
+        dailyCalories = [];
+        saveCal();
+        renderCalories();
+      }
+    }
+
+    function openCalc(type) {
+      if (type === 'bmi') {
+        document.getElementById('bmi-calc').style.display = 'flex';
+      } else {
+        document.getElementById('calories-calc').style.display = 'flex';
+        renderCalories();
+      }
+    }
+
+    function closeCalc() {
+      document.querySelectorAll('.calc-modal').forEach(m => m.style.display = 'none');
+    }
+
+    // Zatvori klikom izvan
+    document.querySelectorAll('.calc-modal').forEach(m => {
+      m.addEventListener('click', (e) => {
+        if (e.target === m) closeCalc();
+      });
     });
 
-    function closeHelp() {
-      helpList.style.display = 'none';
+    // HELP BALONCIC
+    function toggleHelp() {
+      const list = document.getElementById('help-list');
+      list.style.display = (list.style.display === 'block') ? 'none' : 'block';
     }
   </script>
 
 </body>
 </html>
+
+   
+
+
+
