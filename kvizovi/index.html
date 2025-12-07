@@ -5,152 +5,106 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kviz Kategorije</title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     :root {
-      --bg-start: #0a0e17;
-      --bg-end: #0f1a2e;
-      --text: #1e3a8a;
-      --card-bg: rgba(255, 255, 255, 0.07);
-      --card-hover: rgba(255, 255, 255, 0.15);
-      --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-      --shadow-hover: 0 16px 48px rgba(255, 255, 255, 0.3);
+      --bg: linear-gradient(135deg, #0a0e17, #0f1a2e);
+      --card: rgba(255, 255, 255, 0.08);
+      --card-hover: rgba(255, 255, 255, 0.18);
+      --text: #c7d2fe;
+      --accent: #3b82f6;
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       min-height: 100vh;
-      background: linear-gradient(135deg, var(--bg-start), var(--bg-end));
+      background: var(--bg);
       font-family: 'Montserrat', sans-serif;
       color: var(--text);
-      display: grid;
-      place-items: center;
-      overflow: hidden;
-      padding: 20px;
+      padding: 100px 20px 40px;
+      line-height: 1.5;
     }
 
     h1 {
-      position: fixed;
-      top: 30px;
-      left: 50%;
-      transform: translate(-50%);
-      font-size: clamp(2.5rem, 8vw, 4rem);
+      text-align: center;
+      font-size: 2.8rem;
       font-weight: 800;
-      color: #1e40af;
-      text-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-      z-index: 10;
-      pointer-events: none;
+      color: #60a5fa;
+      margin-bottom: 2rem;
+      text-shadow: 0 4px 20px rgba(0,0,0,0.6);
     }
 
-    .quiz-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 2.5rem;
-      max-width: 1400px;
-      width: 100%;
-      padding: 120px 20px 60px;
-      perspective: 1000px;
+    .quiz-list {
+      max-width: 500px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
     }
 
     .quiz-card {
-      background: var(--card-bg);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-radius: 20px;
-      padding: 2.5rem 2rem;
-      text-align: center;
+      background: var(--card);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 1.8rem 1.5rem;
       text-decoration: none;
-      color: #e0e7ff;
-      font-weight: 700;
-      font-size: 1.4rem;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: var(--shadow);
-      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .quiz-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
+      color: var(--text);
+      font-weight: 600;
+      font-size: 1.35rem;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+      transition: all 0.35s ease;
       opacity: 0;
-      transition: opacity 0.4s;
-      pointer-events: none;
-    }
-
-    .quiz-card span.emoji {
-      display: block;
-      font-size: 4.5rem;
-      margin-bottom: 1rem;
-      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
-      transition: transform 0.4s ease;
+      transform: translateY(30px);
+      animation: slideUp 0.6s ease forwards;
     }
 
     .quiz-card:hover {
-      transform: translateY(-20px) scale(1.05) rotateX(5deg);
-      box-shadow: var(--shadow-hover);
+      transform: translateY(-8px);
       background: var(--card-hover);
-      border-color: rgba(59, 130, 246, 0.5);
-    }
-
-    .quiz-card:hover::before {
-      opacity: 1;
-    }
-
-    .quiz-card:hover span.emoji {
-      transform: scale(1.2) rotate(8deg);
+      box-shadow: 0 16px 40px rgba(59, 130, 246, 0.25);
+      border-color: var(--accent);
     }
 
     .quiz-card:active {
-      transform: translateY(-10px) scale(1.02);
+      transform: translateY(-4px);
     }
 
-    /* Mobilni prikaz – kartice jedna ispod druge, veće dodirne površine */
-    @media (max-width: 768px) {
-      .quiz-grid {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-        padding-top: 140px;
-      }
+    .quiz-card .emoji {
+      font-size: 3.2rem;
+      margin-bottom: 0.8rem;
+      display: block;
+      transition: transform 0.3s ease;
+    }
 
-      .quiz-card {
-        padding: 3rem 2rem;
-        font-size: 1.5rem;
-      }
-
-      .quiz-card span.emoji {
-        font-size: 5rem;
-      }
+    .quiz-card:hover .emoji {
+      transform: scale(1.2) rotate(5deg);
     }
 
     /* Animacija ulaska */
-    .quiz-card {
-      opacity: 0;
-      animation: fadeInUp 0.8s ease forwards;
-    }
-
     .quiz-card:nth-child(1) { animation-delay: 0.1s; }
     .quiz-card:nth-child(2) { animation-delay: 0.2s; }
     .quiz-card:nth-child(3) { animation-delay: 0.3s; }
     .quiz-card:nth-child(4) { animation-delay: 0.4s; }
     .quiz-card:nth-child(5) { animation-delay: 0.5s; }
 
-    @keyframes fadeInUp {
-      from {
-        opacity: 0;
-        transform: translateY(60px);
-      }
+    @keyframes slideUp {
       to {
         opacity: 1;
         transform: translateY(0);
+      }
+    }
+
+    /* Mobilni – još čišće */
+    @media (max-width: 480px) {
+      h1 { font-size: 2.4rem; margin-bottom: 1.8rem; }
+      .quiz-card {
+        padding: 2rem 1.2rem;
+        font-size: 1.4rem;
+      }
+      .quiz-card .emoji {
+        font-size: 3.5rem;
       }
     }
   </style>
@@ -159,32 +113,34 @@
 
   <h1>Odaberi kviz</h1>
 
-  <div class="quiz-grid" role="list">
+  <div class="quiz-list" role="list">
     <a href="misici.html" class="quiz-card" role="listitem" aria-label="Kviz o mišićima">
-      <span class="emoji" aria-hidden="true">💪</span>
+      <span class="emoji">💪</span>
       Kviz o mišićima
     </a>
 
     <a href="disanje.html" class="quiz-card" role="listitem" aria-label="Kviz o disanju">
-      <span class="emoji" aria-hidden="true">🌬️</span>
+      <span class="emoji">🌬️</span>
       Kviz o disanju
     </a>
 
     <a href="ozljede.html" class="quiz-card" role="listitem" aria-label="Kviz o ozljedama">
-      <span class="emoji" aria-hidden="true">🩹</span>
+      <span class="emoji">🩹</span>
       Kviz o ozljedama
     </a>
 
     <a href="vjezbe.html" class="quiz-card" role="listitem" aria-label="Kviz o vježbama">
-      <span class="emoji" aria-hidden="true">🏃‍♂️</span>
+      <span class="emoji">🏃‍♂️</span>
       Kviz o vježbama
     </a>
 
     <a href="tijelo.html" class="quiz-card" role="listitem" aria-label="Kviz o ljudskom tijelu">
-      <span class="emoji" aria-hidden="true">❤️</span>
+      <span class="emoji">❤️</span>
       Kviz o ljudskom tijelu
     </a>
   </div>
 
 </body>
 </html>
+ 
+  
