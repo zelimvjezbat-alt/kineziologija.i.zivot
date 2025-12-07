@@ -4,14 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kviz Kategorije</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: linear-gradient(135deg, #0a0e17, #0f1a2e);
-      --card: rgba(255, 255, 255, 0.08);
-      --card-hover: rgba(255, 255, 255, 0.18);
-      --text: #c7d2fe;
-      --accent: #3b82f6;
+      --card: rgba(255, 255, 255, 0.09);
+      --card-hover: rgba(100, 150, 255, 0.22);
+      --text: #e0e7ff;
+      --glow: #60a5fa;
+      --title-glow: rgba(96, 165, 250, 0.6);
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -19,122 +20,198 @@
     body {
       min-height: 100vh;
       background: var(--bg);
-      font-family: 'Montserrat', sans-serif;
+      font-family: 'Inter', sans-serif;
       color: var(--text);
-      padding: 100px 20px 40px;
-      line-height: 1.5;
+      padding: 120px 20px 80px;
+      overflow-x: hidden;
+    }
+
+    /* ← POVRATAK NA POČETNU */
+    .back-link {
+      position: fixed;
+      top: 30px;
+      left: 24px;
+      z-index: 100;
+      color: #93c5fd;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+
+    .back-link:hover {
+      background: rgba(96, 165, 250, 0.2);
+      transform: translateX(5px);
+      box-shadow: 0 8px 25px rgba(96, 165, 250, 0.3);
+    }
+
+    .back-link i {
+      font-size: 1.3rem;
+    }
+
+    /* NASLOV */
+    .title-wrapper {
+      text-align: center;
+      margin-bottom: 3rem;
+      position: relative;
     }
 
     h1 {
-      text-align: center;
-      font-size: 2.8rem;
-      font-weight: 800;
-      color: #60a5fa;
-      margin-bottom: 2rem;
-      text-shadow: 0 4px 20px rgba(0,0,0,0.6);
+      font-size: clamp(2.8rem, 8vw, 4.2rem);
+      font-weight: 900;
+      background: linear-gradient(90deg, #93c5fd, #60a5fa, #a5b4fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -1px;
+      line-height: 1.1;
+      position: relative;
+      display: inline-block;
     }
 
+    h1::before {
+      content: 'Odaberi kviz';
+      position: absolute;
+      left: 50%; top: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1.8em;
+      background: linear-gradient(90deg, transparent, var(--title-glow), transparent);
+      opacity: 0.25;
+      filter: blur(20px);
+      z-index: -1;
+    }
+
+    h1::after {
+      content: '';
+      position: absolute;
+      bottom: -15px; left: 50%;
+      transform: translateX(-50%);
+      width: 120px; height: 5px;
+      background: var(--glow);
+      border-radius: 10px;
+      box-shadow: 0 0 20px var(--glow);
+    }
+
+    /* KARTICE */
     .quiz-list {
-      max-width: 500px;
+      max-width: 540px;
       margin: 0 auto;
       display: flex;
       flex-direction: column;
-      gap: 1.2rem;
+      gap: 1.4rem;
     }
 
     .quiz-card {
       background: var(--card);
-      backdrop-filter: blur(10px);
-      border-radius: 16px;
-      padding: 1.8rem 1.5rem;
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 2.1rem 1.6rem;
       text-decoration: none;
       color: var(--text);
-      font-weight: 600;
-      font-size: 1.35rem;
+      font-weight: 700;
+      font-size: 1.5rem;
       text-align: center;
-      border: 1px solid rgba(255,255,255,0.1);
-      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-      transition: all 0.35s ease;
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
       opacity: 0;
       transform: translateY(30px);
-      animation: slideUp 0.6s ease forwards;
+      animation: slideUp 0.7s ease forwards;
     }
 
-    .quiz-card:hover {
-      transform: translateY(-8px);
+    .quiz-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 20px;
+      background: linear-gradient(135deg, transparent, var(--glow), transparent);
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+
+    .quiz-card:hover, .quiz-card:focus {
+      transform: translateY(-12px);
       background: var(--card-hover);
-      box-shadow: 0 16px 40px rgba(59, 130, 246, 0.25);
-      border-color: var(--accent);
+      box-shadow: 0 25px 60px rgba(96, 165, 250, 0.35);
+      border-color: rgba(96, 165, 250, 0.5);
     }
 
-    .quiz-card:active {
-      transform: translateY(-4px);
-    }
+    .quiz-card:hover::before, .quiz-card:focus::before { opacity: 0.7; }
 
     .quiz-card .emoji {
-      font-size: 3.2rem;
-      margin-bottom: 0.8rem;
+      font-size: 3.6rem;
+      margin-bottom: 0.9rem;
       display: block;
-      transition: transform 0.3s ease;
+      transition: transform 0.4s ease;
     }
 
-    .quiz-card:hover .emoji {
-      transform: scale(1.2) rotate(5deg);
-    }
+    .quiz-card:hover .emoji { transform: scale(1.3) rotate(10deg); }
 
-    /* Animacija ulaska */
-    .quiz-card:nth-child(1) { animation-delay: 0.1s; }
-    .quiz-card:nth-child(2) { animation-delay: 0.2s; }
-    .quiz-card:nth-child(3) { animation-delay: 0.3s; }
-    .quiz-card:nth-child(4) { animation-delay: 0.4s; }
-    .quiz-card:nth-child(5) { animation-delay: 0.5s; }
+    .quiz-card:nth-child(1) { animation-delay: 0.15s; }
+    .quiz-card:nth-child(2) { animation-delay: 0.25s; }
+    .quiz-card:nth-child(3) { animation-delay: 0.35s; }
+    .quiz-card:nth-child(4) { animation-delay: 0.45s; }
+    .quiz-card:nth-child(5) { animation-delay: 0.55s; }
 
     @keyframes slideUp {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Mobilni – još čišće */
     @media (max-width: 480px) {
-      h1 { font-size: 2.4rem; margin-bottom: 1.8rem; }
-      .quiz-card {
-        padding: 2rem 1.2rem;
-        font-size: 1.4rem;
+      .back-link {
+        top: 20px;
+        left: 16px;
+        font-size: 1rem;
+        padding: 8px 12px;
       }
-      .quiz-card .emoji {
-        font-size: 3.5rem;
-      }
+      body { padding: 100px 16px 60px; }
+      h1 { font-size: 2.9rem; }
+      .quiz-card { padding: 2.4rem 1.4rem; font-size: 1.55rem; }
+      .quiz-card .emoji { font-size: 4rem; }
     }
   </style>
 </head>
 <body>
 
-  <h1>Odaberi kviz</h1>
+  <!-- OVDJE JE POVRATAK – stavi ga odmah ispod <body> ili prije naslova -->
+   <!-- POVRATAK NA POČETNU -->
+<a href="../landing.html" class="back-link">
+  ⬅️ Povratak na početnu
+</a>
+
+
+  <div class="title-wrapper">
+    <h1>Odaberi kviz</h1>
+  </div>
 
   <div class="quiz-list" role="list">
-    <a href="misici.html" class="quiz-card" role="listitem" aria-label="Kviz o mišićima">
+    <a href="misici.html" class="quiz-card" tabindex="0">
       <span class="emoji">💪</span>
       Kviz o mišićima
     </a>
-
-    <a href="disanje.html" class="quiz-card" role="listitem" aria-label="Kviz o disanju">
+    <a href="disanje.html" class="quiz-card" tabindex="0">
       <span class="emoji">🌬️</span>
       Kviz o disanju
     </a>
-
-    <a href="ozljede.html" class="quiz-card" role="listitem" aria-label="Kviz o ozljedama">
+    <a href="ozljede.html" class="quiz-card" tabindex="0">
       <span class="emoji">🩹</span>
       Kviz o ozljedama
     </a>
-
-    <a href="vjezbe.html" class="quiz-card" role="listitem" aria-label="Kviz o vježbama">
+    <a href="vjezbe.html" class="quiz-card" tabindex="0">
       <span class="emoji">🏃‍♂️</span>
       Kviz o vježbama
     </a>
-
-    <a href="tijelo.html" class="quiz-card" role="listitem" aria-label="Kviz o ljudskom tijelu">
+    <a href="tijelo.html" class="quiz-card" tabindex="0">
       <span class="emoji">❤️</span>
       Kviz o ljudskom tijelu
     </a>
@@ -142,5 +219,4 @@
 
 </body>
 </html>
- 
-  
+
