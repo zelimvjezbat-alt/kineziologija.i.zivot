@@ -1,37 +1,189 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="hr">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Odaberi kviz — Kinesiology is Science</title>
-  <link rel="stylesheet" href="../style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kviz Kategorije</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    :root {
+      --bg-start: #0a0e17;
+      --bg-end: #0f1a2e;
+      --text: #1e3a8a;
+      --card-bg: rgba(255, 255, 255, 0.07);
+      --card-hover: rgba(255, 255, 255, 0.15);
+      --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      --shadow-hover: 0 16px 48px rgba(255, 255, 255, 0.3);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, var(--bg-start), var(--bg-end));
+      font-family: 'Montserrat', sans-serif;
+      color: var(--text);
+      display: grid;
+      place-items: center;
+      overflow: hidden;
+      padding: 20px;
+    }
+
+    h1 {
+      position: fixed;
+      top: 30px;
+      left: 50%;
+      transform: translate(-50%);
+      font-size: clamp(2.5rem, 8vw, 4rem);
+      font-weight: 800;
+      color: #1e40af;
+      text-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    .quiz-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2.5rem;
+      max-width: 1400px;
+      width: 100%;
+      padding: 120px 20px 60px;
+      perspective: 1000px;
+    }
+
+    .quiz-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 2.5rem 2rem;
+      text-align: center;
+      text-decoration: none;
+      color: #e0e7ff;
+      font-weight: 700;
+      font-size: 1.4rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: var(--shadow);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .quiz-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: linear-gradient(135deg, rgba(255,255,255,0.1), transparent);
+      opacity: 0;
+      transition: opacity 0.4s;
+      pointer-events: none;
+    }
+
+    .quiz-card span.emoji {
+      display: block;
+      font-size: 4.5rem;
+      margin-bottom: 1rem;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
+      transition: transform 0.4s ease;
+    }
+
+    .quiz-card:hover {
+      transform: translateY(-20px) scale(1.05) rotateX(5deg);
+      box-shadow: var(--shadow-hover);
+      background: var(--card-hover);
+      border-color: rgba(59, 130, 246, 0.5);
+    }
+
+    .quiz-card:hover::before {
+      opacity: 1;
+    }
+
+    .quiz-card:hover span.emoji {
+      transform: scale(1.2) rotate(8deg);
+    }
+
+    .quiz-card:active {
+      transform: translateY(-10px) scale(1.02);
+    }
+
+    /* Mobilni prikaz – kartice jedna ispod druge, veće dodirne površine */
+    @media (max-width: 768px) {
+      .quiz-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        padding-top: 140px;
+      }
+
+      .quiz-card {
+        padding: 3rem 2rem;
+        font-size: 1.5rem;
+      }
+
+      .quiz-card span.emoji {
+        font-size: 5rem;
+      }
+    }
+
+    /* Animacija ulaska */
+    .quiz-card {
+      opacity: 0;
+      animation: fadeInUp 0.8s ease forwards;
+    }
+
+    .quiz-card:nth-child(1) { animation-delay: 0.1s; }
+    .quiz-card:nth-child(2) { animation-delay: 0.2s; }
+    .quiz-card:nth-child(3) { animation-delay: 0.3s; }
+    .quiz-card:nth-child(4) { animation-delay: 0.4s; }
+    .quiz-card:nth-child(5) { animation-delay: 0.5s; }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(60px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
 </head>
 <body>
 
-  <div class="container">
-    <h1>Odaberi kategoriju kviza</h1>
-    <p>Izaberi jednu od tema i testiraj svoje znanje o kineziologiji!</p>
+  <h1>Odaberi kviz</h1>
 
-    <div class="menu quiz-menu">
-      <a href="misici.html">
-        <i class="fas fa-dumbbell"></i> Kviz o mišićima
-      </a>
-      <a href="disanje.html">
-        <i class="fas fa-lungs"></i> Kviz o disanju
-      </a>
-      <a href="ozljede.html">
-        <i class="fas fa-user-injured"></i> Kviz o ozljedama
-      </a>
-      <a href="vjezbe.html">
-        <i class="fas fa-running"></i> Kviz o vježbama
-      </a>
-      <a href="tijelo.html">
-        <i class="fas fa-heartbeat"></i> Kviz o ljudskom tijelu
-      </a>
-    </div>
-    <a href="../landing.html" class="back-link">
-  Povratak na početnu
-</a>
+  <div class="quiz-grid" role="list">
+    <a href="misici.html" class="quiz-card" role="listitem" aria-label="Kviz o mišićima">
+      <span class="emoji" aria-hidden="true">💪</span>
+      Kviz o mišićima
+    </a>
+
+    <a href="disanje.html" class="quiz-card" role="listitem" aria-label="Kviz o disanju">
+      <span class="emoji" aria-hidden="true">🌬️</span>
+      Kviz o disanju
+    </a>
+
+    <a href="ozljede.html" class="quiz-card" role="listitem" aria-label="Kviz o ozljedama">
+      <span class="emoji" aria-hidden="true">🩹</span>
+      Kviz o ozljedama
+    </a>
+
+    <a href="vjezbe.html" class="quiz-card" role="listitem" aria-label="Kviz o vježbama">
+      <span class="emoji" aria-hidden="true">🏃‍♂️</span>
+      Kviz o vježbama
+    </a>
+
+    <a href="tijelo.html" class="quiz-card" role="listitem" aria-label="Kviz o ljudskom tijelu">
+      <span class="emoji" aria-hidden="true">❤️</span>
+      Kviz o ljudskom tijelu
+    </a>
   </div>
 
 </body>
