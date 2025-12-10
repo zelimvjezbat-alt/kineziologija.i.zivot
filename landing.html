@@ -136,7 +136,7 @@
       margin-bottom: 0.5rem;
     }
 
-    /* HELP BALONCIC */
+    /* HELP BALON */
     #help-bubble {
       position: fixed;
       top: 16px;
@@ -151,6 +151,7 @@
       z-index: 9999;
       transition: transform 0.2s, box-shadow 0.2s;
     }
+
     #help-bubble:hover {
       transform: scale(1.1);
       box-shadow: 0 8px 20px rgba(0,0,0,0.4);
@@ -171,36 +172,15 @@
       display: none;
       z-index: 9998;
     }
+
     #help-list h3 {
       margin-bottom: 10px;
       font-size: 1.2rem;
       font-weight: 700;
       color: var(--primary);
     }
-    #help-list ul {
-      list-style: none;
-      padding-left: 0;
-    }
-    #help-list ul li {
-      margin-bottom: 8px;
-      font-size: 0.95rem;
-    }
-    #help-list button {
-      margin-top: 10px;
-      width: 100%;
-      padding: 8px 12px;
-      border: none;
-      background: var(--accent);
-      color: white;
-      border-radius: 12px;
-      cursor: pointer;
-      font-weight: 600;
-    }
-    #help-list button:hover {
-      background: var(--primary);
-    }
 
-    /* Kalkulatori (inline) */
+    /* NOVI KALKULATOR ZA DNEVNE KALORIJE */
     .calc-modal {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -222,6 +202,7 @@
       width: 100%;
       max-width: 420px;
       box-shadow: 0 20px 50px rgba(0, 212, 170, 0.2);
+      position: relative;
     }
 
     .calc-content h2 {
@@ -294,111 +275,76 @@
       50% { box-shadow: 0 0 60px rgba(0, 212, 170, 0.5); }
     }
 
-    @media (max-width: 768px) {
-      h1 { font-size: 2.8rem; }
-      .subtitle { font-size: 1.2rem; }
-      .logo { width: 80px; height: 80px; font-size: 2.5rem; }
-      .menu { grid-template-columns: 1fr 1fr; gap: 1.4rem; }
-      .menu a, .menu button { padding: 1.5rem 1rem; font-size: 1.1rem; }
-      .menu a span, .menu button span { font-size: 2.4rem; }
-    }
-
-    @media (max-width: 480px) {
-      h1 { font-size: 2.4rem; }
-      .menu { grid-template-columns: 1fr; }
-      .menu a span, .menu button span { font-size: 2.6rem; }
-      #help-list { width: 260px; right: 10px; top: 60px; }
-    }
   </style>
 </head>
 <body>
-
   <div class="container">
     <div class="logo">💪</div>
-    
     <h1>Kinesiology<br>is Science</h1>
     <p class="subtitle">
       Učite o tijelu, mišićima, pravilnim vježbama i prehrani na zabavan i znanstveni način.
     </p>
 
     <div class="menu">
-      <a href="vjezbe.html">
-        <span>🏋️‍♂️</span>
-        Vježbe
-      </a>
-      <a href="kvizovi/index.html">
-        <span>🧠</span>
-        Kvizovi
-      </a>
-      <a href="funfacts/index1.html">
-        <span>🤯</span>
-        Fun Facts
-      </a>
-      <a href="prehrana.html">
-        <span>🍔</span>
-        Prehrana
-      </a>
+      <a href="vjezbe.html"><span>🏋️‍♂️</span> Vježbe</a>
+      <a href="kvizovi/index.html"><span>🧠</span> Kvizovi</a>
+      <a href="funfacts/index1.html"><span>🤯</span> Fun Facts</a>
+      <a href="prehrana.html"><span>🍔</span> Prehrana</a>
 
-      <!-- NOVO: BMI Kalkulator -->
       <button onclick="openCalc('bmi')">
-        <span>⚖️</span>
-        BMI Kalkulator
+        <span>⚖️</span>BMI Kalkulator
       </button>
 
-      <!-- NOVO: Dnevni unos kalorija -->
       <button onclick="openCalc('calories')">
-        <span>🥗</span>
-        Unos Kalorija
+        <span>🥗</span>Kalkulator Kalorija
       </button>
     </div>
   </div>
 
-  <!-- HELP BALONCIC -->
-  <div id="help-bubble" onclick="toggleHelp()">❓ Pomoć pri vježbanju</div>
-  <div id="help-list">
-    <h3>Vježbe i mišići</h3>
-    <ul>
-      <li>Sklekovi – Prsa 60%, Triceps 30%, Ramena 10%</li>
-      <li>Čučnjevi – Kvadricepsi 50%, Gluteus 30%, Listovi 20%</li>
-      <li>Plank – Core 70%, Ramena 20%, Leđa 10%</li>
-      <li>Biceps pregib – Biceps 100%</li>
-      <li>Deadlift – Leđa 40%, Gluteus 30%, Kvadricepsi 20%, Podlaktica 10%</li>
-      <li>Bench press – Prsa 50%, Triceps 30%, Ramena 20%</li>
-    </ul>
-    <button onclick="toggleHelp()">Zatvori</button>
-  </div>
-
-  <!-- Kalkulatori (BMI i Kalorije) -->
+  <!-- KALKULATOR: BMI -->
   <div id="bmi-calc" class="calc-modal">
     <div class="calc-content">
       <span class="close-calc" onclick="closeCalc()">×</span>
       <h2>BMI Kalkulator</h2>
       <input type="number" id="weight" placeholder="Težina (kg)" class="calc-input">
       <input type="number" id="height" placeholder="Visina (cm)" class="calc-input">
-      <button onclick="calcBMI()" class="calc-btn">Izračunaj BMI</button>
+      <button class="calc-btn" onclick="calcBMI()">Izračunaj BMI</button>
       <div id="bmi-result" class="result">Unesi podatke</div>
     </div>
   </div>
 
+  <!-- NOVI KALKULATOR ZA DNEVNE KALORIJE → BMR + Aktivnost -->
   <div id="calories-calc" class="calc-modal">
     <div class="calc-content">
       <span class="close-calc" onclick="closeCalc()">×</span>
-      <h2>Dnevni Unos Kalorija</h2>
-      <input type="number" id="food-calories" placeholder="Kalorije (npr. 450)" class="calc-input">
-      <input type="text" id="food-name" placeholder="Naziv hrane (npr. Pizza)" class="calc-input">
-      <button onclick="addFood()" class="calc-btn">Dodaj u dnevnik</button>
-      <div style="margin-top:20px; max-height:300px; overflow-y:auto;">
-        <div id="food-list"></div>
-      </div>
-      <div style="margin-top:15px; font-size:1.4rem; font-weight:700; color:var(--primary);">
-        Ukupno: <span id="total-calories">0</span> kcal
-      </div>
-      <button onclick="clearDay()" style="background:#f87171; margin-top:10px;" class="calc-btn">Očisti dan</button>
+      <h2>Kalkulator Potrebnih Kalorija</h2>
+
+      <input type="number" id="age" placeholder="Godine" class="calc-input">
+      <input type="number" id="height2" placeholder="Visina (cm)" class="calc-input">
+      <input type="number" id="weight2" placeholder="Težina (kg)" class="calc-input">
+
+      <select id="gender" class="calc-input">
+        <option value="musko">Muško</option>
+        <option value="zensko">Žensko</option>
+      </select>
+
+      <select id="activity" class="calc-input">
+        <option value="1.2">Niska aktivnost</option>
+        <option value="1.375">Lagano aktivan</option>
+        <option value="1.55">Umjereno aktivan</option>
+        <option value="1.725">Vrlo aktivan</option>
+        <option value="1.9">Izuzetno aktivan</option>
+      </select>
+
+      <button onclick="calcNeeds()" class="calc-btn">Izračunaj</button>
+
+      <div id="needs-result" class="result">Unesi podatke</div>
+    </div>
+  </div>
     </div>
   </div>
 
   <script>
-    // BMI
     function calcBMI() {
       const w = parseFloat(document.getElementById('weight').value);
       const h = parseFloat(document.getElementById('height').value) / 100;
@@ -408,78 +354,67 @@
       document.getElementById('bmi-result').innerHTML = `<strong>${bmi}</strong> → ${cat}`;
     }
 
-    // Kalorije
-    let dailyCalories = JSON.parse(localStorage.getItem('daily_calories')) || [];
-    
-    function renderCalories() {
-      const list = document.getElementById('food-list');
-      list.innerHTML = '';
-      let total = 0;
-      dailyCalories.forEach((item, i) => {
-        total += item.cal;
-        const div = document.createElement('div');
-        div.style.cssText = 'padding:10px; background:rgba(255,255,255,0.05); margin:8px 0; border-radius:10px; display:flex; justify-content:space-between;';
-        div.innerHTML = `${item.name}: <strong>${item.cal} kcal</strong>
-          <button onclick="dailyCalories.splice(${i},1); saveCal(); renderCalories()" style="background:#f87171; color:white; border:none; padding:4px 8px; border-radius:8px; font-size:0.9rem;">×</button>`;
-        list.appendChild(div);
-      });
-      document.getElementById('total-calories').textContent = total;
-    }
+    function calcDailyCalories() {
+      const age = parseInt(document.getElementById('age').value);
+      const height = parseFloat(document.getElementById('height2').value);
+      const weight = parseFloat(document.getElementById('weight2').value);
+      const activity = parseFloat(document.getElementById('activity').value);
 
-    function addFood() {
-      const name = document.getElementById('food-name').value.trim() || "Hrana";
-      const cal = parseInt(document.getElementById('food-calories').value);
-      if (!cal) return alert("Unesi kalorije!");
-      dailyCalories.push({ name, cal });
-      saveCal();
-      renderCalories();
-      document.getElementById('food-name').value = '';
-      document.getElementById('food-calories').value = '';
-    }
-
-    function saveCal() {
-      localStorage.setItem('daily_calories', JSON.stringify(dailyCalories));
-    }
-
-    function clearDay() {
-      if (confirm("Očistiti cijeli današnji unos?")) {
-        dailyCalories = [];
-        saveCal();
-        renderCalories();
+      if (!age || !height || !weight) {
+        document.getElementById('cal-result').innerHTML = "Unesi sve podatke!";
+        return;
       }
+
+      // Mifflin-St Jeor formula (unisex verzija može se prilagoditi ako želiš muško/žensko polje)
+      const BMR = (10 * weight) + (6.25 * height) - (5 * age) + 5;
+      const total = Math.round(BMR * activity);
+
+      document.getElementById('cal-result').innerHTML = `Vaš preporučeni dnevni unos: <strong>${total} kcal</strong>`;
     }
 
     function openCalc(type) {
-      if (type === 'bmi') {
-        document.getElementById('bmi-calc').style.display = 'flex';
-      } else {
-        document.getElementById('calories-calc').style.display = 'flex';
-        renderCalories();
-      }
+      document.getElementById('bmi-calc').style.display = 'none';
+      document.getElementById('calories-calc').style.display = 'none';
+      document.getElementById(type + '-calc').style.display = 'flex';
     }
 
     function closeCalc() {
       document.querySelectorAll('.calc-modal').forEach(m => m.style.display = 'none');
     }
+  
+// --- POPRAVLJEN KALKULATOR KALORIJA ---
+function calcNeeds() {
+  const age = parseInt(document.getElementById('age')?.value);
+  const height = parseFloat(document.getElementById('height2')?.value);
+  const weight = parseFloat(document.getElementById('weight2')?.value);
+  const gender = document.getElementById('gender')?.value;
+  const activity = parseFloat(document.getElementById('activity')?.value);
 
-    // Zatvori klikom izvan
-    document.querySelectorAll('.calc-modal').forEach(m => {
-      m.addEventListener('click', (e) => {
-        if (e.target === m) closeCalc();
-      });
-    });
+  const resultBox = document.getElementById('needs-result');
+  if (!resultBox) return;
 
-    // HELP BALONCIC
-    function toggleHelp() {
-      const list = document.getElementById('help-list');
-      list.style.display = (list.style.display === 'block') ? 'none' : 'block';
-    }
-  </script>
+  if (!age || !height || !weight) {
+    resultBox.innerHTML = "Popuni sva polja!";
+    return;
+  }
 
+  let bmr;
+  if (gender === 'musko') {
+    bmr = 88.36 + (13.4 * weight) + (4.8 * height) - (5.7 * age);
+  } else {
+    bmr = 447.6 + (9.2 * weight) + (3.1 * height) - (4.3 * age);
+  }
+
+  const calories = Math.round(bmr * activity);
+  resultBox.innerHTML = `<strong>${calories}</strong> kcal dnevno`;
+}
+</script>
 </body>
 </html>
 
+
    
+
 
 
 
