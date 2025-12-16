@@ -37,7 +37,6 @@ body {
 
 .card {
   background: var(--card);
-  color: var(--card-foreground);
   border: 1px solid var(--border);
   border-radius: 1rem;
   padding: 1rem;
@@ -52,8 +51,8 @@ body {
   justify-content: center;
   background: var(--ball);
   border: 2px solid var(--primary);
-  cursor: pointer;
   font-weight: 600;
+  cursor: pointer;
   text-align: center;
 }
 
@@ -74,13 +73,11 @@ input {
 
 <main class="flex flex-wrap justify-center gap-12">
 
-<!-- RECORDS -->
 <div class="flex flex-col items-center gap-4">
   <div class="ball" id="recordsBall">🏆 Records</div>
   <div id="recordBalls" class="flex flex-wrap gap-3 justify-center"></div>
 </div>
 
-<!-- TRAININGS -->
 <div class="flex flex-col items-center gap-4">
   <div class="ball" id="creatorBall">➕ New Training</div>
   <div id="trainingBalls" class="flex flex-wrap gap-3 justify-center"></div>
@@ -99,11 +96,24 @@ const contentContainer = document.getElementById('contentContainer');
 const trainingBalls = document.getElementById('trainingBalls');
 const recordBalls = document.getElementById('recordBalls');
 
-const trainings = [];
-const records = [];
+let trainings = [];
+let records = [];
 
 let openTrainingIndex = null;
 let recordsOpen = false;
+
+/* ---------- LOCAL STORAGE ---------- */
+function saveData() {
+  localStorage.setItem('gym_trainings', JSON.stringify(trainings));
+  localStorage.setItem('gym_records', JSON.stringify(records));
+}
+
+function loadData() {
+  const t = localStorage.getItem('gym_trainings');
+  const r = localStorage.getItem('gym_records');
+  trainings = t ? JSON.parse(t) : [];
+  records = r ? JSON.parse(r) : [];
+}
 
 /* ---------- RECORDS ---------- */
 function renderRecords() {
@@ -130,6 +140,7 @@ function renderRecords() {
     if (!input.value) return;
     records.push(input.value);
     input.value = '';
+    saveData();
     renderRecordBalls();
   };
 
@@ -148,6 +159,7 @@ function renderRecordBalls() {
     b.querySelector('button').onclick = (e) => {
       e.stopPropagation();
       records.splice(i, 1);
+      saveData();
       renderRecordBalls();
     };
     recordBalls.appendChild(b);
@@ -200,6 +212,7 @@ function renderSingleTraining(index) {
   del.onclick = () => {
     trainings.splice(index, 1);
     openTrainingIndex = null;
+    saveData();
     renderTrainingBalls();
     contentContainer.innerHTML = '';
   };
@@ -261,6 +274,7 @@ function renderCreator() {
         sets: e.sets.value
       }))
     });
+    saveData();
     renderTrainingBalls();
     contentContainer.innerHTML = '';
   };
@@ -269,9 +283,16 @@ function renderCreator() {
   contentContainer.appendChild(card);
 }
 
+/* ---------- INIT ---------- */
+loadData();
+renderTrainingBalls();
+renderRecordBalls();
+
 document.getElementById('recordsBall').onclick = renderRecords;
 document.getElementById('creatorBall').onclick = renderCreator;
 </script>
 
 </body>
 </html>
+
+
