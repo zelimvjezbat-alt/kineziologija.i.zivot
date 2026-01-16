@@ -12,7 +12,6 @@
   --background: hsl(210, 40%, 98%);
   --foreground: hsl(222, 47%, 11%);
   --card: hsl(0, 0%, 100%);
-  --card-foreground: hsl(222, 47%, 11%);
   --border: hsl(214, 31%, 91%);
   --primary: hsl(189, 94%, 43%);
   --input: hsl(214, 31%, 91%);
@@ -22,7 +21,6 @@
   --background: hsl(222, 84%, 4.9%);
   --foreground: hsl(210, 40%, 98%);
   --card: hsl(222, 84%, 6%);
-  --card-foreground: hsl(210, 40%, 98%);
   --border: hsl(217, 33%, 18%);
   --primary: hsl(186, 78%, 57%);
   --input: hsl(217, 33%, 18%);
@@ -60,6 +58,8 @@ input {
   background: var(--input);
   color: var(--foreground);
   border: 1px solid var(--border);
+  padding: .4rem;
+  border-radius: .4rem;
 }
 </style>
 </head>
@@ -89,8 +89,7 @@ input {
 
 <script>
 const themeToggle = document.getElementById('themeToggle');
-themeToggle.onclick = () =>
-  document.documentElement.classList.toggle('dark');
+themeToggle.onclick = () => document.documentElement.classList.toggle('dark');
 
 const contentContainer = document.getElementById('contentContainer');
 const trainingBalls = document.getElementById('trainingBalls');
@@ -98,45 +97,36 @@ const recordBalls = document.getElementById('recordBalls');
 
 let trainings = [];
 let records = [];
-
 let openTrainingIndex = null;
 let recordsOpen = false;
 
-/* ---------- LOCAL STORAGE ---------- */
-function saveData() {
+/* STORAGE */
+const saveData = () => {
   localStorage.setItem('gym_trainings', JSON.stringify(trainings));
   localStorage.setItem('gym_records', JSON.stringify(records));
-}
+};
+const loadData = () => {
+  trainings = JSON.parse(localStorage.getItem('gym_trainings') || '[]');
+  records = JSON.parse(localStorage.getItem('gym_records') || '[]');
+};
 
-function loadData() {
-  const t = localStorage.getItem('gym_trainings');
-  const r = localStorage.getItem('gym_records');
-  trainings = t ? JSON.parse(t) : [];
-  records = r ? JSON.parse(r) : [];
-}
-
-/* ---------- RECORDS ---------- */
+/* RECORDS */
 function renderRecords() {
-  if (recordsOpen) {
-    contentContainer.innerHTML = '';
-    recordsOpen = false;
-    return;
-  }
-  recordsOpen = true;
+  recordsOpen = !recordsOpen;
   contentContainer.innerHTML = '';
+  if (!recordsOpen) return;
 
   const card = document.createElement('div');
   card.className = 'card';
 
   const input = document.createElement('input');
   input.placeholder = 'Bench Press 100kg';
-  input.className = 'p-1 rounded w-full mb-2';
 
-  const btn = document.createElement('button');
-  btn.textContent = 'Add';
-  btn.className = 'bg-cyan-500 text-white px-2 py-1 rounded';
+  const add = document.createElement('button');
+  add.textContent = 'Add';
+  add.className = 'bg-cyan-500 text-white px-3 py-1 rounded mt-2';
 
-  btn.onclick = () => {
+  add.onclick = () => {
     if (!input.value) return;
     records.push(input.value);
     input.value = '';
@@ -144,7 +134,7 @@ function renderRecords() {
     renderRecordBalls();
   };
 
-  card.append(input, btn);
+  card.append(input, add);
   contentContainer.appendChild(card);
 }
 
@@ -152,21 +142,41 @@ function renderRecordBalls() {
   recordBalls.innerHTML = '';
   records.forEach((r, i) => {
     const b = document.createElement('div');
-    b.className = 'ball w-32 h-32 text-xs relative';
-    b.innerHTML = `<span>${r}</span>
-      <button class="absolute top-1 right-2">✕</button>`;
+    b.className = 'ball w-32 h-32 text-xs p-2 flex-col';
 
-    b.querySelector('button').onclick = (e) => {
+    const text = document.createElement('div');
+    text.textContent = r;
+
+    const edit = document.createElement('button');
+    edit.textContent = 'Edit';
+    edit.className = 'text-yellow-400 text-xs';
+
+    edit.onclick = () => {
+      const val = prompt('Edit record:', r);
+      if (val) {
+        records[i] = val;
+        saveData();
+        renderRecordBalls();
+      }
+    };
+
+    const del = document.createElement('button');
+    del.textContent = '✕';
+    del.className = 'text-red-400 text-xs';
+
+    del.onclick = e => {
       e.stopPropagation();
       records.splice(i, 1);
       saveData();
       renderRecordBalls();
     };
+
+    b.append(text, edit, del);
     recordBalls.appendChild(b);
   });
 }
 
-/* ---------- TRAININGS ---------- */
+/* TRAININGS */
 function renderTrainingBalls() {
   trainingBalls.innerHTML = '';
   trainings.forEach((t, i) => {
@@ -178,121 +188,105 @@ function renderTrainingBalls() {
   });
 }
 
-function toggleTraining(index) {
-  if (openTrainingIndex === index) {
-    contentContainer.innerHTML = '';
-    openTrainingIndex = null;
-    return;
-  }
-  openTrainingIndex = index;
-  renderSingleTraining(index);
+function toggleTraining(i) {
+  openTrainingIndex = openTrainingIndex === i ? null : i;
+  contentContainer.innerHTML = '';
+  if (openTrainingIndex !== null) renderSingleTraining(i);
 }
 
-function renderSingleTraining(index) {
-  contentContainer.innerHTML = '';
-  const t = trainings[index];
-
+function renderSingleTraining(i) {
+  const t = trainings[i];
   const card = document.createElement('div');
   card.className = 'card';
 
-  const h3 = document.createElement('h3');
-  h3.textContent = t.name;
-  h3.className = 'font-bold mb-2';
-  card.appendChild(h3);
-
+  card.innerHTML = `<h3 class="font-bold mb-2">${t.name}</h3>`;
   t.exercises.forEach(ex => {
-    const d = document.createElement('div');
-    d.textContent = `${ex.name} — ${ex.reps} reps × ${ex.sets} sets`;
-    card.appendChild(d);
+    card.innerHTML += `<div>${ex.name} – ${ex.reps}×${ex.sets}</div>`;
   });
 
+  const wrap = document.createElement('div');
+  wrap.className = 'flex gap-2 mt-4';
+
+  const edit = document.createElement('button');
+  edit.textContent = 'Edit';
+  edit.className = 'bg-yellow-500 text-white flex-1 rounded py-1';
+  edit.onclick = () => renderEditTraining(i);
+
   const del = document.createElement('button');
-  del.textContent = 'Delete Training';
-  del.className = 'bg-red-500 text-white px-2 py-1 rounded mt-3';
+  del.textContent = 'Delete';
+  del.className = 'bg-red-500 text-white flex-1 rounded py-1';
   del.onclick = () => {
-    trainings.splice(index, 1);
-    openTrainingIndex = null;
+    trainings.splice(i, 1);
     saveData();
     renderTrainingBalls();
     contentContainer.innerHTML = '';
   };
 
-  card.appendChild(del);
+  wrap.append(edit, del);
+  card.appendChild(wrap);
   contentContainer.appendChild(card);
 }
 
-/* ---------- CREATOR ---------- */
-function renderCreator() {
+/* EDIT TRAINING – MOBILE FRIENDLY */
+function renderEditTraining(i) {
+  const t = trainings[i];
   contentContainer.innerHTML = '';
-  openTrainingIndex = null;
-
   const card = document.createElement('div');
   card.className = 'card';
 
-  const nameInput = document.createElement('input');
-  nameInput.placeholder = 'Training Name';
-  nameInput.className = 'p-1 rounded w-full mb-2';
+  const name = document.createElement('input');
+  name.value = t.name;
+  name.className = 'w-full mb-3';
 
-  const exercises = [];
   const exDiv = document.createElement('div');
+  const inputs = [];
 
-  const addEx = document.createElement('button');
-  addEx.textContent = 'Add Exercise';
-  addEx.className = 'bg-green-500 text-white px-2 py-1 rounded mb-2';
-
-  addEx.onclick = () => {
+  t.exercises.forEach(ex => {
     const row = document.createElement('div');
-    row.className = 'flex gap-2 mb-2';
+    row.className = 'flex flex-col gap-2 mb-3';
 
-    const exName = document.createElement('input');
-    exName.placeholder = 'Exercise';
+    const n = document.createElement('input'); n.value = ex.name;
+    const r = document.createElement('input'); r.value = ex.reps;
+    const s = document.createElement('input'); s.value = ex.sets;
 
-    const reps = document.createElement('input');
-    reps.placeholder = 'Reps';
-    reps.className = 'w-20';
-
-    const sets = document.createElement('input');
-    sets.placeholder = 'Sets';
-    sets.className = 'w-20';
-
-    row.append(exName, reps, sets);
+    row.append(n, r, s);
     exDiv.appendChild(row);
-
-    exercises.push({ exName, reps, sets });
-  };
+    inputs.push({ n, r, s });
+  });
 
   const save = document.createElement('button');
-  save.textContent = 'Save Training';
-  save.className = 'bg-cyan-500 text-white px-2 py-1 rounded ml-2';
+  save.textContent = 'Save Changes';
+  save.className = 'bg-cyan-500 text-white w-full py-2 rounded mt-2';
 
   save.onclick = () => {
-    trainings.push({
-      name: nameInput.value,
-      exercises: exercises.map(e => ({
-        name: e.exName.value,
-        reps: e.reps.value,
-        sets: e.sets.value
+    trainings[i] = {
+      name: name.value,
+      exercises: inputs.map(e => ({
+        name: e.n.value,
+        reps: e.r.value,
+        sets: e.s.value
       }))
-    });
+    };
     saveData();
     renderTrainingBalls();
-    contentContainer.innerHTML = '';
+    renderSingleTraining(i);
   };
 
-  card.append(nameInput, addEx, exDiv, save);
+  card.append(name, exDiv, save);
   contentContainer.appendChild(card);
 }
 
-/* ---------- INIT ---------- */
+/* CREATOR */
+document.getElementById('creatorBall').onclick = () => location.reload();
+document.getElementById('recordsBall').onclick = renderRecords;
+
 loadData();
 renderTrainingBalls();
 renderRecordBalls();
-
-document.getElementById('recordsBall').onclick = renderRecords;
-document.getElementById('creatorBall').onclick = renderCreator;
 </script>
 
 </body>
 </html>
 
+ 
 
